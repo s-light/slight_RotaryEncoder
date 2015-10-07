@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map for slight_RotaryEncoder
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+slight_RotaryEncoder	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+
+update	KEYWORD2
+updateClassic	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
