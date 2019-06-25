@@ -88,12 +88,15 @@ void myencoder_event(slight_RotaryEncoder *instance, byte event) {
         // rotation
         case slight_RotaryEncoder::event_Rotated : {
             // get current data
-            int16_t temp_Steps = (*instance).getSteps();
+            int16_t temp_steps = (*instance).getSteps();
+            int16_t temp_stepsAccel = (*instance).getStepsAccelerated();
             // clear data
             (*instance).clearSteps();
 
             Serial.print(F("  steps: "));
-            Serial.println(temp_Steps);
+            Serial.println(temp_steps);
+            Serial.print(F("  steps accelerated: "));
+            Serial.println(temp_stepsAccel);
 
         } break;
         // currently there are no other events fired.
