@@ -1,6 +1,6 @@
 /******************************************
     slight_RotaryEncoder Library
-    for more information changelog / history see slight_RotaryEncoder.cpp
+    for more information see slight_RotaryEncoder.cpp
     written by stefan krueger (s-light),
     gitn@s-light.eu, http://s-light.eu, https://github.com/s-light/
 *******************************************/
@@ -50,167 +50,152 @@ https://opensource.org/licenses/mit-license.php
 
 //Check if this class is allready there or if it must be created...
 #ifndef slight_RotaryEncoder_Mod_h
-    #define slight_RotaryEncoder_Mod_h
+#define slight_RotaryEncoder_Mod_h
 
-    /**
-      * Includes Core Arduino functionality
-      **/
-    #if ARDUINO < 100
-    #include <WProgram.h>
-    #else
-    #include <Arduino.h>
-    #endif
+/**
+  * Includes Core Arduino functionality
+  **/
+#if ARDUINO < 100
+#include <WProgram.h>
+#else
+#include <Arduino.h>
+#endif
 
-    /** Class Definition: **/
-    class slight_RotaryEncoder {
+/** Class Definition: **/
+class slight_RotaryEncoder {
     public:
-    // public definitions:
+        // public definitions:
 
-    //call back function definition
-    //typedef void (* tCbfuncValueChanged) (byte bID, int iValue, byte bAcceleration);
-    //typedef void (* tCbfuncValueChanged) (slight_RotaryEncoder *pInstance, int iValue, byte bAcceleration);
-    typedef void (* tcbfOnEvent) (slight_RotaryEncoder *pInstance, byte bEvent);
+        //call back function definition
+        //typedef void (* tCbfuncValueChanged) (uint8_t bID, int16_t iValue, uint8_t raw_Acceleration);
+        //typedef void (* tCbfuncValueChanged) (slight_RotaryEncoder *pInstance, int16_t iValue, uint8_t raw_Acceleration);
+        typedef void (* tcbfOnEvent) (slight_RotaryEncoder *pInstance, uint8_t event);
 
-    // init
-    static const byte event_NoEvent			=  0;
+        // init
+        static const uint8_t event_NoEvent			=  0;
 
-    // State
-    static const byte event_StateChanged	= 10;
+        // State
+        static const uint8_t event_StateChanged	= 10;
 
-    static const byte state_NotValid		= 11;
-    static const byte state_UNDEFINED		= 12;
-    static const byte state_CW				= 13;
-    static const byte state_CCW				= 14;
-    static const byte state_HalfStep		= 15;
+        static const uint8_t state_NotValid		= 11;
+        static const uint8_t state_UNDEFINED		= 12;
+        static const uint8_t state_CW				= 13;
+        static const uint8_t state_CCW				= 14;
+        static const uint8_t state_HalfStep		= 15;
 
-    // Value rotate
-    static const byte event_Rotated			= 20;
-    static const byte event_Rotated_CW		= 21;
-    static const byte event_Rotated_CCW		= 22;
-
-
-    // public methods
-    //Constructor
-    slight_RotaryEncoder(
-    byte cbID_New,
-    byte cbPin_A_New,
-    byte cbPin_B_New,
-    byte cbPulsPerStep_New,
-    //tCbfuncValueChanged cbfuncValueChanged_New
-    tcbfOnEvent cbfCallbackOnEvent_New
-    );
-    // add option 'bool inverse_logic = false'
-    // --> the = false means a standard value / makes it optional?
-
-    //Destructor
-    ~slight_RotaryEncoder();
-
-    void begin();
-
-    // check if class is ready to operate.
-    boolean isReady();
-
-    // getID
-    byte getID();
-
-    // state
-    byte getState();
-    byte printState(Print &pOut, byte bStateTemp);
-    byte printState(Print &pOut);
-
-    // event
-    byte getLastEvent();
-    byte printEvent(Print &pOut, byte bEventTemp);
-    byte printEventLast(Print &pOut);
+        // Value rotate
+        static const uint8_t event_Rotated			= 20;
+        static const uint8_t event_Rotated_CW		= 21;
+        static const uint8_t event_Rotated_CCW		= 22;
 
 
-    // run every loop to update event system
-    void update();
+        // public methods
+        slight_RotaryEncoder(
+            uint8_t id_new,
+            uint8_t pin_A_new,
+            uint8_t pin_B_new,
+            uint8_t pulse_per_step_new,
+            //tCbfuncValueChanged cbfuncValueChanged_New
+            tcbfOnEvent cbfCallbackOnEvent_New
+        );
+        ~slight_RotaryEncoder();
 
-    // updateInput
-    void updateClassic();
+        void begin();
+        boolean isReady();
 
-    // old
-    void updateGray();
+        uint8_t getID();
 
+        // state
+        uint8_t getState();
+        uint8_t printState(Print &out, uint8_t stateTemp);
+        uint8_t printState(Print &out);
 
+        // event
+        uint8_t getLastEvent();
+        uint8_t printEvent(Print &out, uint8_t eventTemp);
+        uint8_t printevent_last(Print &out);
 
-    // get steps
-    int getSteps();
-    int getStepsAccelerated();
-    // get AccelerationFactor
-    byte getAccelerationFactor();
-    // call after you have read all data
-    void resetData();
+        // run every loop to update event system
+        void update();
 
+        // updateInput
+        void updateClassic();
+        // old
+        void updateGray();
 
-
+        // get steps
+        int16_t getSteps();
+        int16_t getStepsAccelerated();
+        // get AccelerationFactor
+        uint8_t getAccelerationFactor();
+        // call after you have read all data
+        void resetData();
 
     private:
-    // per object data
+        // per object data
 
-    // ID
-    const byte cbID;
+        // ID
+        const uint8_t id;
 
-    // flag to check if the begin function is already called and the class is ready to work.
-    boolean bReady;
+        // flag to check if the begin function is already called and the class is ready to work.
+        boolean ready;
 
-    // internal state
-    byte bState;
+        // internal state
+        uint8_t state;
 
-    // event
-    byte bEvent;
-    byte bEventLast;
-    const tcbfOnEvent cbfCallbackOnEvent;
+        // event
+        uint8_t event;
+        uint8_t event_last;
+        const tcbfOnEvent cbfCallbackOnEvent;
 
-    //call back functions:
-    //const tCbfuncValueChanged cbfuncValueChanged;
+        //call back functions:
+        //const tCbfuncValueChanged cbfuncValueChanged;
 
-    // pins
-    const byte cbPin_A;
-    const byte cbPin_B;
+        // pins
+        const uint8_t pin_A;
+        const uint8_t pin_B;
 
-    // pulses per step
-    const byte cbPulsPerStep;
+        // pulses per step
+        const uint8_t pulse_per_step;
 
-    // internal pulse counter
-    byte bPulsCount;
+        // internal pulse counter
+        uint8_t pulse_count;
 
-    // internal Step Counter
-    int iStepCount;
-
-
-    // temp GrayCode store
-    byte bGrayCode;
-
-    static const int8_t iGrayTable[];
-
-    // Acceleration calculation
-    unsigned long ulTimeStamp;
-    word wDuration;
-    word wAcceleration_DurationStepSum;
-    byte bAccelerationDuration;
-    byte bAccelerationFactor;
+        // internal Step Counter
+        int16_t step_count;
 
 
-    // is this used?
-    // temp ?
-    boolean bA;
-    boolean bB;
-    boolean bA_last;
-    boolean bB_last;
-    boolean bLastFullStep;
+        // temp GrayCode store
+        uint8_t gray_code;
 
-    // private methods
-    void calcAcceleration();
+        static const int8_t gray_table[];
 
-    void stateChange();
+        // Acceleration calculation
+        uint32_t timestamp;
+        uint16_t duration;
+        uint16_t acceleration_duration_step_sum;
+        uint8_t acceleration_duration;
+        uint8_t acceleration_factor;
 
-    void generateEvent(byte bEventNew);
 
-    byte multiMap(byte val, byte* _in, byte* _out, uint8_t size);
-    };
+        // is this used?
+        // temp ?
+        boolean raw_A;
+        boolean raw_B;
+        boolean raw_A_last;
+        boolean raw_B_last;
+        boolean last_full_step;
 
-#endif //ifndef slight_RotaryEncoder_h
+        // private methods
+        void calcAcceleration();
+
+        void stateChange();
+
+        void generateEvent(uint8_t eventNew);
+
+        uint8_t multiMap(uint8_t val, uint8_t* _in, uint8_t* _out, uint8_t size);
+};
+
+#endif // ifndef slight_RotaryEncoder_h
 
 /** the end **/

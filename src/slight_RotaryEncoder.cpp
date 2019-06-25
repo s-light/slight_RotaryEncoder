@@ -95,27 +95,27 @@ https://opensource.org/licenses/mit-license.php
 // info
 /*******************************************/
 #ifdef debug_slight_RotaryEncoder
-void print_info(Print &pOut) {
-    pOut.println();
+void print_info(Print &out) {
+    out.println();
     //             "|~~~~~~~~~|~~~~~~~~~|~~~..~~~|~~~~~~~~~|~~~~~~~~~|"
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println(F("|                       ^ ^                      |"));
-    pOut.println(F("|                      (0,0)                     |"));
-    pOut.println(F("|                      ( _ )                     |"));
-    pOut.println(F("|                       \" \"                      |"));
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println(F("| slight_RotaryEncoder library"));
-    pOut.println(F("|   library for Rotary Encoder handling"));
-    pOut.println(F("|     with acceleration support"));
-    pOut.println(F("|"));
-    pOut.println(F("| dream on & have fun :-)"));
-    pOut.println(F("|"));
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println(F("|"));
-    pOut.println(F("| last changed: 25.06.2019"));
-    pOut.println(F("|"));
-    pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-    pOut.println();
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println(F("|                       ^ ^                      |"));
+    out.println(F("|                      (0,0)                     |"));
+    out.println(F("|                      ( _ )                     |"));
+    out.println(F("|                       \" \"                      |"));
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println(F("| slight_RotaryEncoder library"));
+    out.println(F("|   library for Rotary Encoder handling"));
+    out.println(F("|     with acceleration support"));
+    out.println(F("|"));
+    out.println(F("| dream on & have fun :-)"));
+    out.println(F("|"));
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println(F("|"));
+    out.println(F("| last changed: 25.06.2019"));
+    out.println(F("|"));
+    out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+    out.println();
 }
 #endif
 
@@ -135,44 +135,44 @@ void print_info(Print &pOut) {
 /*******************************************/
 // constructor
 /*******************************************/
-// slight_RotaryEncoder::slight_RotaryEncoder(byte bPin_A_NewValue, byte bPin_B_NewValue, byte bPulsPerStep_NewValue, tCBF_OnStep cbfOnStep_NewValue) {
+// slight_RotaryEncoder::slight_RotaryEncoder(uint8_t bPin_A_NewValue, uint8_t bPin_B_NewValue, uint8_t bpulse_per_step_NewValue, tCBF_OnStep cbfOnStep_NewValue) {
 slight_RotaryEncoder::slight_RotaryEncoder(
-    byte cbID_New,
-    byte cbPin_A_New,
-    byte cbPin_B_New,
-    byte cbPulsPerStep_New,
+    uint8_t id_new,
+    uint8_t pin_A_new,
+    uint8_t pin_B_new,
+    uint8_t pulse_per_step_new,
     // tCbfuncValueChanged cbfuncValueChanged_New
     tcbfOnEvent cbfCallbackOnEvent_New
 )
-:	cbID (cbID_New),
-    cbPin_A ( cbPin_A_New ),
-    cbPin_B ( cbPin_B_New ),
-    cbPulsPerStep ( cbPulsPerStep_New ),
+:	id (id_new),
+    pin_A ( pin_A_new ),
+    pin_B ( pin_B_new ),
+    pulse_per_step ( pulse_per_step_new ),
     //cbfuncValueChanged (cbfuncValueChanged_New)
     cbfCallbackOnEvent(cbfCallbackOnEvent_New)
 {
 
-    bA				= 0;
-    bB				= 0;
-    bA_last			= 0;
-    bB_last			= 0;
-    bLastFullStep	= 0;
-    bPulsCount		= 0;
+    raw_A				= 0;
+    raw_B				= 0;
+    raw_A_last			= 0;
+    raw_B_last			= 0;
+    last_full_step	= 0;
+    pulse_count		= 0;
 
-    bEvent		= event_NoEvent;
-    bEventLast	= event_NoEvent;
+    event		= event_NoEvent;
+    event_last	= event_NoEvent;
 
-    bState		= state_UNDEFINED;
+    state		= state_UNDEFINED;
 
-    ulTimeStamp			= 0;
-    wDuration			= 0;
-    wAcceleration_DurationStepSum		= 0;
-    bAccelerationFactor	= 1;
-    iStepCount			= 0;
+    timestamp			= 0;
+    duration			= 0;
+    acceleration_duration_step_sum		= 0;
+    acceleration_factor	= 1;
+    step_count			= 0;
 
-    bGrayCode			= 0;
+    gray_code			= 0;
 
-    bReady = false;
+    ready = false;
 }
 
 // Destructor
@@ -182,7 +182,7 @@ slight_RotaryEncoder::~slight_RotaryEncoder() {
 
 
 void slight_RotaryEncoder::begin() {
-    if (bReady == false) {
+    if (ready == false) {
     #ifdef debug_FaderLin
     void print_info(Serial);
     Serial.println(F("************************************************************"));
@@ -190,19 +190,19 @@ void slight_RotaryEncoder::begin() {
     Serial.println(F("************************************************************"));
     Serial.println(F("FaderLin::begin: "));
 
-    Serial.println(F("\t pinMode(cbPin_A, INPUT_PULLUP);"));
-    Serial.println(F("\t pinMode(cbPin_B, INPUT_PULLUP);"));
+    Serial.println(F("\t pinMode(pin_A, INPUT_PULLUP);"));
+    Serial.println(F("\t pinMode(pin_B, INPUT_PULLUP);"));
     #endif
     // initialise pins
-    pinMode(cbPin_A, INPUT_PULLUP);
-    pinMode(cbPin_B, INPUT_PULLUP);
+    pinMode(pin_A, INPUT_PULLUP);
+    pinMode(pin_B, INPUT_PULLUP);
 
-    bEvent			= event_NoEvent;
-    bEventLast		= event_NoEvent;
+    event			= event_NoEvent;
+    event_last		= event_NoEvent;
 
-    bReady = true;
+    ready = true;
     #ifdef debug_FaderLin
-    Serial.println(F("\t bReady= true"));
+    Serial.println(F("\t ready= true"));
     Serial.println(F("\t run."));
     #endif
     }
@@ -219,9 +219,9 @@ void slight_RotaryEncoder::begin() {
 
 // updateGray
 void slight_RotaryEncoder::updateGray() {
-    if (bReady == true) {
+    if (ready == true) {
     /** dont know how to moved to global context**/
-    const static int8_t iGrayTable[] = {
+    const static int8_t gray_table[] = {
     //		//			new		old
     // res, //	index	A	B	A	B
      0, //	 0		0	0	0	0
@@ -244,23 +244,23 @@ void slight_RotaryEncoder::updateGray() {
     /**/
 
     // move last reading to old position (bit 0, 1)
-    bGrayCode >>= 2;
+    gray_code >>= 2;
 
     // write new states to bit 3, 4??
-    if( digitalRead(cbPin_A) )
-    bGrayCode |= 0x04;		// new A state to bit 4
-    if( digitalRead(cbPin_B) )
-    bGrayCode |= 0x08;		// new B state to bit 5
+    if( digitalRead(pin_A) )
+    gray_code |= 0x04;		// new A state to bit 4
+    if( digitalRead(pin_B) )
+    gray_code |= 0x08;		// new B state to bit 5
 
     //
-    iStepCount = iStepCount + iGrayTable[bGrayCode];
+    step_count = step_count + gray_table[gray_code];
     } // ready end
 }
 
 
 // called from timer interupt every 1ms
 void slight_RotaryEncoder::updateClassic() {
-    if (bReady == true) {
+    if (ready == true) {
     /**
     rast punkt immer bei 0,0 oder 1,1
     CCW
@@ -311,43 +311,43 @@ void slight_RotaryEncoder::updateClassic() {
 
     **/
 
-    boolean bTemp_A = digitalRead(cbPin_A);
-    boolean bTemp_B = digitalRead(cbPin_B);
-    if ( (bTemp_A != bA) || (bTemp_B != bB)) {
+    boolean bTemp_A = digitalRead(pin_A);
+    boolean bTemp_B = digitalRead(pin_B);
+    if ( (bTemp_A != raw_A) || (bTemp_B != raw_B)) {
     //status changed.
-    bA = bTemp_A;
-    bB = bTemp_B;
+    raw_A = bTemp_A;
+    raw_B = bTemp_B;
 
     #ifdef debug_FaderLin
     /** **
     Serial.print(bNr);
     Serial.print("?: ");
-    Serial.print(bA);
+    Serial.print(raw_A);
     Serial.print(", ");
-    Serial.println(bB);
+    Serial.println(raw_B);
     /** **/
     #endif
 
     // half step; save state of encoder pins for direction check
-    if (bA != bB) {
-    bA_last = bA;
-    bB_last = bB;
-    bState = state_HalfStep;
+    if (raw_A != raw_B) {
+    raw_A_last = raw_A;
+    raw_B_last = raw_B;
+    state = state_HalfStep;
     stateChange();
     } else {
     // full step; one step is finished. --> This is Only true if the last full step was not the same level (high or low)
-    if ( (bA == bB) && (bA != bLastFullStep) ) {
+    if ( (raw_A == raw_B) && (raw_A != last_full_step) ) {
     //remember LastFullStep (error correction)
-    bLastFullStep = bA;
+    last_full_step = raw_A;
     // Encoder turns CW
-    if (bA == bB_last)  {
+    if (raw_A == raw_B_last)  {
     //Do Something
-    bState = state_CW;
+    state = state_CW;
     stateChange();
     } else {
     // Encoder turns CCW
-    if (bB == bA_last)  {
-    bState = state_CCW;
+    if (raw_B == raw_A_last)  {
+    state = state_CCW;
     stateChange();
     }
     }
@@ -360,9 +360,9 @@ void slight_RotaryEncoder::updateClassic() {
 
 // called from main loop
 void slight_RotaryEncoder::update() {
-    if (bReady == true) {
+    if (ready == true) {
     // update event system
-    if ( iStepCount != 0 ) {
+    if ( step_count != 0 ) {
     // calc Acceleration
     calcAcceleration();
     // fire event
@@ -373,89 +373,89 @@ void slight_RotaryEncoder::update() {
 
 
 
-byte slight_RotaryEncoder::getID() {
-    return cbID;
+uint8_t slight_RotaryEncoder::getID() {
+    return id;
 }
 
 boolean slight_RotaryEncoder::isReady() {
-    return bReady;
+    return ready;
 }
 
 
-byte slight_RotaryEncoder::getState() {
-    return bState;
+uint8_t slight_RotaryEncoder::getState() {
+    return state;
 };
 
-byte slight_RotaryEncoder::printState(Print &pOut, byte bStateTemp) {
-    switch (bStateTemp) {
+uint8_t slight_RotaryEncoder::printState(Print &out, uint8_t stateTemp) {
+    switch (stateTemp) {
     case slight_RotaryEncoder::state_NotValid : {
-    pOut.print(F("NotValid"));
+    out.print(F("NotValid"));
     } break;
     case slight_RotaryEncoder::state_UNDEFINED : {
-    pOut.print(F("UNDEFINED"));
+    out.print(F("UNDEFINED"));
     } break;
     case slight_RotaryEncoder::state_CW : {
-    pOut.print(F("CW"));
+    out.print(F("CW"));
     } break;
     case slight_RotaryEncoder::state_CCW : {
-    pOut.print(F("CCW"));
+    out.print(F("CCW"));
     } break;
     case slight_RotaryEncoder::state_HalfStep : {
-    pOut.print(F("HalfStep"));
+    out.print(F("HalfStep"));
     } break;
     default: {
-    pOut.print(F("error: '"));
-    pOut.print(bState);
-    pOut.print(F(" ' is not a know state."));
+    out.print(F("error: '"));
+    out.print(state);
+    out.print(F(" ' is not a know state."));
     }
     } //end switch
-    return bStateTemp;
+    return stateTemp;
 };
 
-byte slight_RotaryEncoder::printState(Print &pOut) {
-    printState(pOut, bState);
-    return bState;
+uint8_t slight_RotaryEncoder::printState(Print &out) {
+    printState(out, state);
+    return state;
 };
 
 
-byte slight_RotaryEncoder::getLastEvent() {
-    return bEventLast;
+uint8_t slight_RotaryEncoder::getLastEvent() {
+    return event_last;
 };
 
-byte slight_RotaryEncoder::printEvent(Print &pOut, byte bEventTemp) {
-    switch (bEventTemp) {
+uint8_t slight_RotaryEncoder::printEvent(Print &out, uint8_t eventTemp) {
+    switch (eventTemp) {
     case slight_RotaryEncoder::event_NoEvent : {
-    pOut.print(F("no event"));
+    out.print(F("no event"));
     } break;
 
     case slight_RotaryEncoder::event_StateChanged : {
-    pOut.print(F("state changed"));
+    out.print(F("state changed"));
     } break;
 
     // rotation
     case slight_RotaryEncoder::event_Rotated : {
-    pOut.print(F("rotated"));
+    out.print(F("rotated"));
     } break;
     case slight_RotaryEncoder::event_Rotated_CW : {
-    pOut.print(F("rotated CW"));
+    out.print(F("rotated CW"));
     } break;
     case slight_RotaryEncoder::event_Rotated_CCW : {
-    pOut.print(F("rotated CCW"));
+    out.print(F("rotated CCW"));
     } break;
 
 
     default: {
-    pOut.print(F("error: '"));
-    pOut.print(bState);
-    pOut.print(F(" ' is not a know event."));
+    out.print(F("error: '"));
+    out.print(state);
+    out.print(F(" ' is not a know event."));
     }
     } //end switch
-    return bState;
+    return state;
 };
 
-byte slight_RotaryEncoder::printEventLast(Print &pOut) {
-    printEvent(pOut, bEventLast);
-    return bEventLast;
+uint8_t slight_RotaryEncoder::printevent_last(Print &out) {
+    printEvent(out, event_last);
+    return event_last;
 };
 
 
@@ -463,22 +463,22 @@ byte slight_RotaryEncoder::printEventLast(Print &pOut) {
 
 
 int slight_RotaryEncoder::getSteps() {
-    return iStepCount;
+    return step_count;
 }
 
 int slight_RotaryEncoder::getStepsAccelerated() {
-    return (iStepCount * bAccelerationFactor);
+    return (step_count * acceleration_factor);
 }
 
-byte slight_RotaryEncoder::getAccelerationFactor() {
-    return bAccelerationFactor;
+uint8_t slight_RotaryEncoder::getAccelerationFactor() {
+    return acceleration_factor;
 }
 
 void slight_RotaryEncoder::resetData() {
-    iStepCount						= 0;
-    bAccelerationFactor				= 0;
-    bAccelerationDuration			= 0;
-    wAcceleration_DurationStepSum	= 0;
+    step_count						= 0;
+    acceleration_factor				= 0;
+    acceleration_duration			= 0;
+    acceleration_duration_step_sum	= 0;
 }
 
 /************************************************/
@@ -486,27 +486,27 @@ void slight_RotaryEncoder::resetData() {
 /************************************************/
 
 void slight_RotaryEncoder::calcAcceleration() {
-    //bAccelerationFactor = wAcceleration_DurationStepSum / abs(iStepCount);
+    //acceleration_factor = acceleration_duration_step_sum / abs(step_count);
     #ifdef debug_FaderLin
     Serial.print(F("update "));
-    Serial.println(cbID);
-    Serial.print(F(" wAcceleration_DurationStepSum ["));
-    Serial.print(wAcceleration_DurationStepSum);
-    Serial.print(F("] / abs(iStepCount["));
-    Serial.print(iStepCount);
+    Serial.println(id);
+    Serial.print(F(" acceleration_duration_step_sum ["));
+    Serial.print(acceleration_duration_step_sum);
+    Serial.print(F("] / abs(step_count["));
+    Serial.print(step_count);
     Serial.print(F("]) : "));
-    Serial.println(wAcceleration_DurationStepSum / abs(iStepCount));
+    Serial.println(acceleration_duration_step_sum / abs(step_count));
     #endif
 
-    const byte accMap_cbSize		= 6;
-    byte accMap_wIn [accMap_cbSize]	= {   0,  10,  11,  25,  26, 255};
-    byte accMap_wOut[accMap_cbSize]	= {  10,  10,   5,   5,   1,   1};
+    const uint8_t accMap_cbSize		= 6;
+    uint8_t accMap_wIn [accMap_cbSize]	= {   0,  10,  11,  25,  26, 255};
+    uint8_t accMap_wOut[accMap_cbSize]	= {  10,  10,   5,   5,   1,   1};
 
     // calculate average duration
-    bAccelerationDuration = wAcceleration_DurationStepSum / abs(iStepCount);
+    acceleration_duration = acceleration_duration_step_sum / abs(step_count);
 
     // map duration to factor
-    bAccelerationFactor =  multiMap(bAccelerationDuration, accMap_wIn, accMap_wOut, accMap_cbSize);
+    acceleration_factor =  multiMap(acceleration_duration, accMap_wIn, accMap_wOut, accMap_cbSize);
 
 }
 
@@ -516,68 +516,68 @@ void slight_RotaryEncoder::stateChange() {
     /*
     printState();
     Serial.print(" count: ");
-    Serial.print(bPulsCount);
+    Serial.print(pulse_count);
     Serial.println(); **/
     #endif
 
 
-    if ( (bState == state_CW) || (bState == state_CCW) ) {
+    if ( (state == state_CW) || (state == state_CCW) ) {
     // One new Pulse - add to counter
-    bPulsCount = bPulsCount + 1;
+    pulse_count = pulse_count + 1;
 
     //check if a full Step is reached
-    if (bPulsCount >= cbPulsPerStep) {
+    if (pulse_count >= pulse_per_step) {
     // One Step for the User
-    bPulsCount = 0;
+    pulse_count = 0;
     // calc duration between last and this step.
-    //ulDuration = micros() - ulTimeStamp;
-    unsigned long ulDuration_Temp = millis() - ulTimeStamp;
+    //ulDuration = micros() - timestamp;
+    uint32_t ulDuration_Temp = millis() - timestamp;
 
     if (ulDuration_Temp < 50) {
     #ifdef debug_FaderLin
     Serial.println(F(" < 30"));
     #endif
-    wDuration = ulDuration_Temp;
+    duration = ulDuration_Temp;
     } else {
     #ifdef debug_FaderLin
     Serial.println(F(" > 30"));
     #endif
-    wDuration = 50;
+    duration = 50;
     }
 
     // acceleration base
-    wAcceleration_DurationStepSum = wAcceleration_DurationStepSum + wDuration;
+    acceleration_duration_step_sum = acceleration_duration_step_sum + duration;
 
     #ifdef debug_FaderLin
     /** DEBUG OUT **/
     Serial.print(F("stateChange "));
-    Serial.println(cbID);
+    Serial.println(id);
     Serial.print(F(" Duration:    "));
-    Serial.println(wDuration);
+    Serial.println(duration);
     Serial.print(F(" DurationSum: "));
-    Serial.println(wAcceleration_DurationStepSum);
+    Serial.println(acceleration_duration_step_sum);
     //Serial.print(": ");
     //printState();
     //Serial.println();/
     #endif
 
-    // Update iStepCount
-    switch (bState) {
+    // Update step_count
+    switch (state) {
     case state_CW: {
-    //iStepCount = iStepCount + int( 1 * bAccelerationFactor );
-    iStepCount = iStepCount + 1;
+    //step_count = step_count + int( 1 * acceleration_factor );
+    step_count = step_count + 1;
     break;
     }
     case state_CCW: {
-    //iStepCount = iStepCount - ( 1 * bAccelerationFactor );
-    iStepCount = iStepCount - 1;
+    //step_count = step_count - ( 1 * acceleration_factor );
+    step_count = step_count - 1;
     break;
     }
     }
 
     // reset TimeStamp for next measurment
-    //ulTimeStamp = micros();
-    ulTimeStamp = millis();
+    //timestamp = micros();
+    timestamp = millis();
     }
     }
 
@@ -588,20 +588,20 @@ void slight_RotaryEncoder::stateChange() {
 }
 
 
-void slight_RotaryEncoder::generateEvent(byte bEventNew) {
-    bEvent = bEventNew;
+void slight_RotaryEncoder::generateEvent(uint8_t eventNew) {
+    event = eventNew;
     // call event
-    //if (bEvent != event_NoEvent) {
-    if ( (bEvent != event_NoEvent) && (bEvent != event_StateChanged) ){
-    cbfCallbackOnEvent(this, bEvent);
+    //if (event != event_NoEvent) {
+    if ( (event != event_NoEvent) && (event != event_StateChanged) ){
+    cbfCallbackOnEvent(this, event);
     }
-    bEventLast = bEvent;
-    bEvent = event_NoEvent;
+    event_last = event;
+    event = event_NoEvent;
 }
 
 // MultiMap
 //   http://arduino.cc/playground/Main/MultiMap
-byte slight_RotaryEncoder::multiMap(byte val, byte* _in, byte* _out, uint8_t size) {
+uint8_t slight_RotaryEncoder::multiMap(uint8_t val, uint8_t* _in, uint8_t* _out, uint8_t size) {
   // take care the value is within range
   // val = constrain(val, _in[0], _in[size-1]);
   if (val <= _in[0]) return _out[0];

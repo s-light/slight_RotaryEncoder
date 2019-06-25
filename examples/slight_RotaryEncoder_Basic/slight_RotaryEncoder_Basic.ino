@@ -81,34 +81,34 @@
 /**************************************************************************************************/
 /** info                                                                                         **/
 /**************************************************************************************************/
-void print_info(Print &pOut) {
-	pOut.println();
+void print_info(Print &out) {
+	out.println();
 	//             "|~~~~~~~~~|~~~~~~~~~|~~~..~~~|~~~~~~~~~|~~~~~~~~~|"
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println(F("|                       ^ ^                      |"));
-	pOut.println(F("|                      (0,0)                     |"));
-	pOut.println(F("|                      ( _ )                     |"));
-	pOut.println(F("|                       \" \"                      |"));
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println(F("| slight_RotaryEncoder_Basic.ino"));
-	pOut.println(F("|   Basic Example for slight_RotaryEncoder library"));
-	pOut.println(F("|"));
-	pOut.println(F("| dream on & have fun :-)"));
-	pOut.println(F("|"));
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println(F("|"));
-	//pOut.println(F("| Version: Nov 11 2013  20:35:04"));
-	pOut.print(F("| version: "));
-	pOut.print(F(__DATE__));
-	pOut.print(F("  "));
-	pOut.print(F(__TIME__));
-	pOut.println();
-	pOut.println(F("|"));
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println();
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("|                       ^ ^                      |"));
+	out.println(F("|                      (0,0)                     |"));
+	out.println(F("|                      ( _ )                     |"));
+	out.println(F("|                       \" \"                      |"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("| slight_RotaryEncoder_Basic.ino"));
+	out.println(F("|   Basic Example for slight_RotaryEncoder library"));
+	out.println(F("|"));
+	out.println(F("| dream on & have fun :-)"));
+	out.println(F("|"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("|"));
+	//out.println(F("| Version: Nov 11 2013  20:35:04"));
+	out.print(F("| version: "));
+	out.print(F(__DATE__));
+	out.print(F("  "));
+	out.print(F(__TIME__));
+	out.println();
+	out.println(F("|"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println();
 	
-	//pOut.println(__DATE__); Nov 11 2013
-	//pOut.println(__TIME__); 20:35:04
+	//out.println(__DATE__); Nov 11 2013
+	//out.println(__TIME__); 20:35:04
 }
 
 /** Serial.print to Flash: Notepad++ Replace RegEx
@@ -124,28 +124,28 @@ void print_info(Print &pOut) {
 /**  slight Rotary Encoder                       **/
 /**************************************************/
 
-const byte bPin_Rotary_1_A = A0;	// PB4
-const byte bPin_Rotary_1_B = A1;	// PD6
+const uint8_t bPin_Rotary_1_A = A0;	// PB4
+const uint8_t bPin_Rotary_1_B = A1;	// PD6
 
 /* constructor
 slight_RotaryEncoder(
-	byte cbID_New,
-	byte cbPin_A_New,
-	byte cbPin_B_New,
-	byte cbPulsPerStep_New,
+	uint8_t id_new,
+	uint8_t pin_A_new,
+	uint8_t pin_B_new,
+	uint8_t pulse_per_step_new,
 	tcbfOnEvent cbfCallbackOnEvent_New
 );
 */
 slight_RotaryEncoder myEncoder1(
-	1, // byte cbID_New,
-	bPin_Rotary_1_A, // byte cbPin_A_New,
-	bPin_Rotary_1_B, // byte cbPin_B_New,
-	2, // byte cbPulsPerStep_New,
+	1, // uint8_t id_new,
+	bPin_Rotary_1_A, // uint8_t pin_A_new,
+	bPin_Rotary_1_B, // uint8_t pin_B_new,
+	2, // uint8_t pulse_per_step_new,
 	myCallback_onEvent // tcbfOnEvent cbfCallbackOnEvent_New
 );
 
 
-word wCounterTest1 = 1000;
+uint16_t wCounterTest1 = 1000;
 
 
 /**************************************************/
@@ -153,10 +153,10 @@ word wCounterTest1 = 1000;
 /**************************************************/
 
 boolean bLEDState = 0;
-const byte cbID_LED_Info = 9; //D9
+const uint8_t id_LED_Info = 9; //D9
 
-unsigned long ulDebugOut_LiveSign_TimeStamp_LastAction	= 0;
-const word cwDebugOut_LiveSign_UpdateInterval			= 1000; //ms
+uint32_t ulDebugOut_LiveSign_TimeStamp_LastAction	= 0;
+const uint16_t cwDebugOut_LiveSign_UpdateInterval			= 1000; //ms
 
 boolean bDebugOut_LiveSign_Serial_Enabled	= 0;
 boolean bDebugOut_LiveSign_LED_Enabled		= 1;
@@ -255,8 +255,8 @@ void setupTimer1() {
 
 // http://forum.arduino.cc/index.php?topic=183790.msg1362282#msg1362282
 int freeRam () {
-  extern int __heap_start, *__brkval; 
-  int v; 
+  extern int16_t __heap_start, *__brkval; 
+  int16_t v; 
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
 
@@ -264,9 +264,9 @@ int freeRam () {
 /** rotary encoder                             **/
 /************************************************/
 
-void myCallback_onEvent(slight_RotaryEncoder *pInstance, byte bEvent) {
+void myCallback_onEvent(slight_RotaryEncoder *pInstance, uint8_t event) {
 	// react on events:
-	switch (bEvent) {
+	switch (event) {
 		// rotation
 		case slight_RotaryEncoder::event_Rotated : {
 			// get current data
@@ -278,7 +278,7 @@ void myCallback_onEvent(slight_RotaryEncoder *pInstance, byte bEvent) {
 			Serial.println((*pInstance).getID());
 			
 			Serial.print(F("\t Event: "));
-			(*pInstance).printEvent(Serial, bEvent);
+			(*pInstance).printEvent(Serial, event);
 			Serial.println();
 			
 			Serial.print(F("\t steps: "));
@@ -311,8 +311,8 @@ void setup() {
 	/************************************************/
 		
 		//LiveSign
-		pinMode(cbID_LED_Info, OUTPUT);
-		digitalWrite(cbID_LED_Info, HIGH);
+		pinMode(id_LED_Info, OUTPUT);
+		digitalWrite(id_LED_Info, HIGH);
 		
 		// as of arduino 1.0.1 you can use INPUT_PULLUP
 		
@@ -332,8 +332,8 @@ void setup() {
 		// for ATmega32U4 devices:
 		#if defined (__AVR_ATmega32U4__)
 			// Wait for Serial Connection to be Opend from Host or 6second timeout
-			unsigned long ulTimeStamp_Start = millis();
-			while( (! Serial) && ( (millis() - ulTimeStamp_Start) < 6000 ) ) {
+			uint32_t timestamp_Start = millis();
+			while( (! Serial) && ( (millis() - timestamp_Start) < 6000 ) ) {
 				1;
 			}
 		#endif
@@ -428,10 +428,10 @@ void loop() {
 				bLEDState = ! bLEDState;
 				if (bLEDState) {
 					//set LED to HIGH
-					digitalWrite(cbID_LED_Info, HIGH);
+					digitalWrite(id_LED_Info, HIGH);
 				} else {
 					//set LED to LOW
-					digitalWrite(cbID_LED_Info, LOW);
+					digitalWrite(id_LED_Info, LOW);
 				}
 			}
 			

@@ -82,37 +82,37 @@
 /**************************************************************************************************/
 /** info                                                                                         **/
 /**************************************************************************************************/
-void print_info(Print &pOut) {
-	pOut.println();
+void print_info(Print &out) {
+	out.println();
 	//             "|~~~~~~~~~|~~~~~~~~~|~~~..~~~|~~~~~~~~~|~~~~~~~~~|"
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println(F("|                       ^ ^                      |"));
-	pOut.println(F("|                      (0,0)                     |"));
-	pOut.println(F("|                      ( _ )                     |"));
-	pOut.println(F("|                       \" \"                      |"));
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println(F("| slight_RotaryEncoder_Advanced.ino"));
-	pOut.println(F("|   Test sketch for slight_RotaryEncoder library"));
-	pOut.println(F("|"));
-	pOut.println(F("| This Sketch has a debug-menu:"));
-	pOut.println(F("| send '?'+Return for help"));
-	pOut.println(F("|"));
-	pOut.println(F("| dream on & have fun :-)"));
-	pOut.println(F("|"));
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println(F("|"));
-	//pOut.println(F("| Version: Nov 11 2013  20:35:04"));
-	pOut.print(F("| version: "));
-	pOut.print(F(__DATE__));
-	pOut.print(F("  "));
-	pOut.print(F(__TIME__));
-	pOut.println();
-	pOut.println(F("|"));
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-	pOut.println();
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("|                       ^ ^                      |"));
+	out.println(F("|                      (0,0)                     |"));
+	out.println(F("|                      ( _ )                     |"));
+	out.println(F("|                       \" \"                      |"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("| slight_RotaryEncoder_Advanced.ino"));
+	out.println(F("|   Test sketch for slight_RotaryEncoder library"));
+	out.println(F("|"));
+	out.println(F("| This Sketch has a debug-menu:"));
+	out.println(F("| send '?'+Return for help"));
+	out.println(F("|"));
+	out.println(F("| dream on & have fun :-)"));
+	out.println(F("|"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("|"));
+	//out.println(F("| Version: Nov 11 2013  20:35:04"));
+	out.print(F("| version: "));
+	out.print(F(__DATE__));
+	out.print(F("  "));
+	out.print(F(__TIME__));
+	out.println();
+	out.println(F("|"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+	out.println();
 
-	//pOut.println(__DATE__); Nov 11 2013
-	//pOut.println(__TIME__); 20:35:04
+	//out.println(__DATE__); Nov 11 2013
+	//out.println(__TIME__); 20:35:04
 }
 
 /** Serial.print to Flash: Notepad++ Replace RegEx
@@ -128,37 +128,37 @@ void print_info(Print &pOut) {
 /**  slight Rotary Encoder                       **/
 /**************************************************/
 
-const byte bPin_Rotary_1_A =  8;	// PB4
-const byte bPin_Rotary_1_B = 12;	// PD6
-const byte bPin_Rotary_2_A =  6;	// PD7
-const byte bPin_Rotary_2_B =  4;	// PD4
+const uint8_t bPin_Rotary_1_A =  8;	// PB4
+const uint8_t bPin_Rotary_1_B = 12;	// PD6
+const uint8_t bPin_Rotary_2_A =  6;	// PD7
+const uint8_t bPin_Rotary_2_B =  4;	// PD4
 
 /* constructor
 slight_RotaryEncoder(
-	byte cbID_New,
-	byte cbPin_A_New,
-	byte cbPin_B_New,
-	byte cbPulsPerStep_New,
+	uint8_t id_new,
+	uint8_t pin_A_new,
+	uint8_t pin_B_new,
+	uint8_t pulse_per_step_new,
 	tcbfOnEvent cbfCallbackOnEvent_New
 );
 */
 slight_RotaryEncoder myEncoder1(
-	1, // byte cbID_New,
-	bPin_Rotary_1_A, // byte cbPin_A_New,
-	bPin_Rotary_1_B, // byte cbPin_B_New,
-	1, // byte cbPulsPerStep_New,
+	1, // uint8_t id_new,
+	bPin_Rotary_1_A, // uint8_t pin_A_new,
+	bPin_Rotary_1_B, // uint8_t pin_B_new,
+	1, // uint8_t pulse_per_step_new,
 	myCallback_onEvent // tcbfOnEvent cbfCallbackOnEvent_New
 );
 slight_RotaryEncoder myEncoder2(
-	2, // byte cbID_New,
-	bPin_Rotary_2_A, // byte cbPin_A_New,
-	bPin_Rotary_2_B, // byte cbPin_B_New,
-	1, // byte cbPulsPerStep_New,
+	2, // uint8_t id_new,
+	bPin_Rotary_2_A, // uint8_t pin_A_new,
+	bPin_Rotary_2_B, // uint8_t pin_B_new,
+	1, // uint8_t pulse_per_step_new,
 	myCallback_onEvent // tcbfOnEvent cbfCallbackOnEvent_New
 );
 
-word wCounterTest1 = 1000;
-word wCounterTest2 = 1000;
+uint16_t wCounterTest1 = 1000;
+uint16_t wCounterTest2 = 1000;
 
 boolean bDebugOption_SimulateHeavyMainLoop = false;
 
@@ -167,10 +167,10 @@ boolean bDebugOption_SimulateHeavyMainLoop = false;
 /**************************************************/
 
 boolean bLEDState = 0;
-const byte cbID_LED_Info = 9; //D9
+const uint8_t id_LED_Info = 9; //D9
 
-unsigned long ulDebugOut_LiveSign_TimeStamp_LastAction	= 0;
-const word cwDebugOut_LiveSign_UpdateInterval			= 1000; //ms
+uint32_t ulDebugOut_LiveSign_TimeStamp_LastAction	= 0;
+const uint16_t cwDebugOut_LiveSign_UpdateInterval			= 1000; //ms
 
 boolean bDebugOut_LiveSign_Serial_Enabled	= 0;
 boolean bDebugOut_LiveSign_LED_Enabled		= 1;
@@ -333,15 +333,15 @@ void setupTimer1() {
 
 // http://forum.arduino.cc/index.php?topic=183790.msg1362282#msg1362282
 int freeRam () {
-  extern int __heap_start, *__brkval;
-  int v;
+  extern int16_t __heap_start, *__brkval;
+  int16_t v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
 
-void printBinary8(byte bIn)  {
+void printBinary8(uint8_t bIn)  {
 
-	for (unsigned int mask = 0b10000000; mask; mask >>= 1) {
+	for (unsigned int16_t mask = 0b10000000; mask; mask >>= 1) {
 		if (mask & bIn) {
 			Serial.print('1');
 		}
@@ -351,10 +351,10 @@ void printBinary8(byte bIn)  {
 	}
 }
 
-void printBinary12(word bIn)  {
+void printBinary12(uint16_t bIn)  {
 	//                       B12345678   B12345678
-	//for (unsigned int mask = 0x8000; mask; mask >>= 1) {
-	for (unsigned int mask = 0b100000000000; mask; mask >>= 1) {
+	//for (unsigned int16_t mask = 0x8000; mask; mask >>= 1) {
+	for (unsigned int16_t mask = 0b100000000000; mask; mask >>= 1) {
 		if (mask & bIn) {
 			Serial.print('1');
 		}
@@ -364,9 +364,9 @@ void printBinary12(word bIn)  {
 	}
 }
 
-void printBinary16(word wIn)  {
+void printBinary16(uint16_t wIn)  {
 
-	for (unsigned int mask = 0b1000000000000000; mask; mask >>= 1) {
+	for (unsigned int16_t mask = 0b1000000000000000; mask; mask >>= 1) {
 		if (mask & wIn) {
 			Serial.print('1');
 		}
@@ -389,10 +389,10 @@ uint8_t bMenuMode = cbMenuMode_MainMenu;
 
 
 // SubMenu SetValues
-void handle_SubMenu1(Print &pOut, char *caCommand) {
-	pOut.println(F("SubMenu1:"));
-	pOut.println(F("\t nothing here."));
-	pOut.println(F("\t finished."));
+void handle_SubMenu1(Print &out, char *caCommand) {
+	out.println(F("SubMenu1:"));
+	out.println(F("\t nothing here."));
+	out.println(F("\t finished."));
 	// exit submenu
 	// reset state manschine of submenu
 	// jump to main
@@ -402,71 +402,71 @@ void handle_SubMenu1(Print &pOut, char *caCommand) {
 
 
 // Main Menu
-void handle_MainMenu(Print &pOut, char *caCommand) {
-	/* pOut.print("sCommand: '");
-	pOut.print(sCommand);
-	pOut.println("'"); */
+void handle_MainMenu(Print &out, char *caCommand) {
+	/* out.print("sCommand: '");
+	out.print(sCommand);
+	out.println("'"); */
 	switch (caCommand[0]) {
 		case 'h':
 		case 'H':
 		case '?': {
 			// help
-			pOut.println(F("____________________________________________________________"));
-			pOut.println();
-			pOut.println(F("Help for Commands:"));
-			pOut.println();
-			pOut.println(F("\t '?': this help"));
-			pOut.println(F("\t 'y': toggle DebugOut livesign print"));
-			pOut.println(F("\t 'Y': toggle DebugOut livesign LED"));
-			pOut.println(F("\t 'x': tests"));
-			pOut.println();
-			pOut.println(F("\t 'l': toggle Simulation of heavy main loop "));
-			//pOut.println(F("\t 'f': DemoFadeTo(ID, value) 'f1:65535'"));
-			pOut.println();
-			pOut.println(F("\t 'set:' enter SubMenu1"));
-			pOut.println();
-			pOut.println(F("____________________________________________________________"));
+			out.println(F("____________________________________________________________"));
+			out.println();
+			out.println(F("Help for Commands:"));
+			out.println();
+			out.println(F("\t '?': this help"));
+			out.println(F("\t 'y': toggle DebugOut livesign print"));
+			out.println(F("\t 'Y': toggle DebugOut livesign LED"));
+			out.println(F("\t 'x': tests"));
+			out.println();
+			out.println(F("\t 'l': toggle Simulation of heavy main loop "));
+			//out.println(F("\t 'f': DemoFadeTo(ID, value) 'f1:65535'"));
+			out.println();
+			out.println(F("\t 'set:' enter SubMenu1"));
+			out.println();
+			out.println(F("____________________________________________________________"));
 		} break;
 		case 'y': {
-			pOut.println(F("\t toggle DebugOut livesign Serial:"));
+			out.println(F("\t toggle DebugOut livesign Serial:"));
 			bDebugOut_LiveSign_Serial_Enabled = !bDebugOut_LiveSign_Serial_Enabled;
-			pOut.print(F("\t bDebugOut_LiveSign_Serial_Enabled:"));
-			pOut.println(bDebugOut_LiveSign_Serial_Enabled);
+			out.print(F("\t bDebugOut_LiveSign_Serial_Enabled:"));
+			out.println(bDebugOut_LiveSign_Serial_Enabled);
 		} break;
 		case 'Y': {
-			pOut.println(F("\t toggle DebugOut livesign LED:"));
+			out.println(F("\t toggle DebugOut livesign LED:"));
 			bDebugOut_LiveSign_LED_Enabled = !bDebugOut_LiveSign_LED_Enabled;
-			pOut.print(F("\t bDebugOut_LiveSign_LED_Enabled:"));
-			pOut.println(bDebugOut_LiveSign_LED_Enabled);
+			out.print(F("\t bDebugOut_LiveSign_LED_Enabled:"));
+			out.println(bDebugOut_LiveSign_LED_Enabled);
 		} break;
 		case 'x': {
 			// get state
-			pOut.println(F("__________"));
-			pOut.println(F("Tests:"));
+			out.println(F("__________"));
+			out.println(F("Tests:"));
 
-			debug_time_measurement(pOut);
+			debug_time_measurement(out);
 
-			pOut.println();
+			out.println();
 
-			pOut.println(F("__________"));
+			out.println(F("__________"));
 		} break;
 		//--------------------------------------------------------------------------------
 		case 'l': {
-			pOut.println(F("\t toggle DebugOut livesign LED:"));
+			out.println(F("\t toggle DebugOut livesign LED:"));
 			bDebugOption_SimulateHeavyMainLoop = !bDebugOption_SimulateHeavyMainLoop;
-			pOut.print(F("\t bDebugOption_SimulateHeavyMainLoop:"));
-			pOut.println(bDebugOption_SimulateHeavyMainLoop);
+			out.print(F("\t bDebugOption_SimulateHeavyMainLoop:"));
+			out.println(bDebugOption_SimulateHeavyMainLoop);
 		} break;
 		/*case 'f': {
-			pOut.print(F("\t DemoFadeTo "));
-			byte bID = atoi(&caCommand[1]);
-			pOut.print(bID);
-			pOut.print(F(" : "));
-			word wValue = atoi(&caCommand[3]);
-			pOut.print(wValue);
-			pOut.println();
+			out.print(F("\t DemoFadeTo "));
+			uint8_t bID = atoi(&caCommand[1]);
+			out.print(bID);
+			out.print(F(" : "));
+			uint16_t wValue = atoi(&caCommand[3]);
+			out.print(wValue);
+			out.println();
 			//demo_fadeTo(bID, wValue);
-			pOut.print(F("\t demo for parsing values --> finished."));
+			out.print(F("\t demo for parsing values --> finished."));
 		} break;*/
 		//--------------------------------------------------------------------------------
 		case 's': {
@@ -476,7 +476,7 @@ void handle_MainMenu(Print &pOut, char *caCommand) {
 				bMenuMode = cbMenuMode_SubMenu1;
 				if(1){	//if ( caCommand[4] != '\0' ) {
 					//full length command
-					//handle_SetValues(pOut, &caCommand[4]);
+					//handle_SetValues(out, &caCommand[4]);
 				} else {
 					bMenu_Input_New_FlagComplete = true;
 				}
@@ -484,9 +484,9 @@ void handle_MainMenu(Print &pOut, char *caCommand) {
 		} break;
 		//--------------------------------------------------------------------------------
 		default: {
-			pOut.print(F("command '"));
-			pOut.print(caCommand);
-			pOut.println(F("' not recognized. try again."));
+			out.print(F("command '"));
+			out.print(caCommand);
+			out.println(F("' not recognized. try again."));
 			sMenu_Input_New[0] = '?';
 			bMenu_Input_New_FlagComplete = true;
 		}
@@ -497,13 +497,13 @@ void handle_MainMenu(Print &pOut, char *caCommand) {
 
 
 // Menu Switcher
-void menuSwitcher(Print &pOut, char *caCommand) {
+void menuSwitcher(Print &out, char *caCommand) {
 	switch (bMenuMode) {
 			case cbMenuMode_MainMenu: {
-				handle_MainMenu(pOut, caCommand);
+				handle_MainMenu(out, caCommand);
 			} break;
 			case cbMenuMode_SubMenu1: {
-				handle_SubMenu1(pOut, caCommand);
+				handle_SubMenu1(out, caCommand);
 			} break;
 			default: {
 				// something went wronge - so reset and show MainMenu
@@ -513,7 +513,7 @@ void menuSwitcher(Print &pOut, char *caCommand) {
 }
 
 // Check for NewLineComplete and enter menuSwitcher
-// sets Menu Output channel (pOut)
+// sets Menu Output channel (out)
 void check_NewLineComplete() {
 	// if SMenuCurrent is a full Line (terminated with \n) than parse things
 	if (bMenu_Input_New_FlagComplete) {
@@ -521,8 +521,8 @@ void check_NewLineComplete() {
 		Serial.print(F("bMenu_Input_New_FlagComplete: sMenu_Input_New: '"));
 		Serial.print(sMenu_Input_New);
 		Serial.println(F("'"));
-		Serial.print(F("   bState_UI: '"));
-		Serial.print(bState_UI);
+		Serial.print(F("   state_UI: '"));
+		Serial.print(state_UI);
 		Serial.println(F("'"));/**/
 
 		// coppy to current buffer
@@ -545,7 +545,7 @@ void check_NewLineComplete() {
 void handle_SerialReceive() {
 	// collect next input text
 	while (Serial.available()) {
-		// get the new byte:
+		// get the new uint8_t:
 		char charNew = (char)Serial.read();
 		/*Serial.print(F("charNew '"));
 		Serial.print(charNew);
@@ -594,7 +594,7 @@ void handle_SerialReceive() {
 /** rotary encoder                             **/
 /************************************************/
 /*
-void myRotaryEncoder_callback_ValueChanged(byte bID, int iValue, byte bAccelerationDuration) {
+void myRotaryEncoder_callback_ValueChanged(uint8_t bID, int16_t iValue, uint8_t acceleration_duration) {
 
 	Serial.print(F("myEncoder"));
 	Serial.print(bID);
@@ -602,19 +602,19 @@ void myRotaryEncoder_callback_ValueChanged(byte bID, int iValue, byte bAccelerat
 	Serial.print(F("\t steps: "));
 	Serial.println(iValue);
 	Serial.print(F("\t AccelDur: "));
-	Serial.println(bAccelerationDuration);
+	Serial.println(acceleration_duration);
 
 
-	byte wAccelerationMap_in []		= {   0,  10,  11,  25,  26, 255};
-	byte wAccelerationMap_out[]		= {  10,  10,   5,   5,   1,   1};
-	byte wAccelerationMap_size		= 5;
+	uint8_t wAccelerationMap_in []		= {   0,  10,  11,  25,  26, 255};
+	uint8_t wAccelerationMap_out[]		= {  10,  10,   5,   5,   1,   1};
+	uint8_t wAccelerationMap_size		= 5;
 
-	byte bAccelerationFactor =  multiMap(bAccelerationDuration, wAccelerationMap_in, wAccelerationMap_out, wAccelerationMap_size);
+	uint8_t acceleration_factor =  multiMap(acceleration_duration, wAccelerationMap_in, wAccelerationMap_out, wAccelerationMap_size);
 
-	Serial.print(F("\t bAccelerationFactor: "));
-	Serial.println(bAccelerationFactor);
+	Serial.print(F("\t acceleration_factor: "));
+	Serial.println(acceleration_factor);
 
-	int iStepsAccelerated =(iValue * bAccelerationFactor);
+	int iStepsAccelerated =(iValue * acceleration_factor);
 
 	Serial.print(F("\t iStepsAccelerated: "));
 	Serial.println(iStepsAccelerated);
@@ -638,15 +638,15 @@ void myRotaryEncoder_callback_ValueChanged(byte bID, int iValue, byte bAccelerat
 }
 */
 
-void myCallback_onEvent(slight_RotaryEncoder *pInstance, byte bEvent) {
+void myCallback_onEvent(slight_RotaryEncoder *pInstance, uint8_t event) {
 	// react on events:
-	switch (bEvent) {
+	switch (event) {
 		// rotation
 		case slight_RotaryEncoder::event_Rotated : {
 			// get current data
 			int iTemp_Steps = (*pInstance).getSteps();
 			int iTemp_StepsAccelerated = (*pInstance).getStepsAccelerated();
-			byte bTemp_AccelerationFactor = (*pInstance).getAccelerationFactor();
+			uint8_t bTemp_AccelerationFactor = (*pInstance).getAccelerationFactor();
 			// clear data
 			(*pInstance).resetData();
 
@@ -655,7 +655,7 @@ void myCallback_onEvent(slight_RotaryEncoder *pInstance, byte bEvent) {
 			Serial.println((*pInstance).getID());
 
 			Serial.print(F("\t event: "));
-			(*pInstance).printEvent(Serial, bEvent);
+			(*pInstance).printEvent(Serial, event);
 			Serial.println();
 
 			Serial.print(F("\t steps: "));
@@ -690,59 +690,59 @@ void myCallback_onEvent(slight_RotaryEncoder *pInstance, byte bEvent) {
 /** debug things                               **/
 /************************************************/
 
-void debug_time_measurement(Print &pOut) {
+void debug_time_measurement(Print &out) {
 
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~"));
 
-	pOut.println(F("time measurements:"));
+	out.println(F("time measurements:"));
 
 
-	unsigned long ulIndex = 0;
-	unsigned long ulLoopCount = 1000000; // max 4,294,967,295
+	uint32_t ulIndex = 0;
+	uint32_t ulLoopCount = 1000000; // max 4,294,967,295
 
-	unsigned long ulTimeStamp_Start = millis();
-	unsigned long ulTimeStamp_Stop = millis();
-	unsigned long ulDuration = 0;
+	uint32_t timestamp_Start = millis();
+	uint32_t timestamp_Stop = millis();
+	uint32_t ulDuration = 0;
 
-	pOut.print(F("\t ulLoopCount: "));
-	pOut.println(ulLoopCount);
+	out.print(F("\t ulLoopCount: "));
+	out.println(ulLoopCount);
 
 	/**/ {
-		pOut.println(F("    myEncoder1.updateClassic();"));
-		pOut.println(F("\t started..."));
+		out.println(F("    myEncoder1.updateClassic();"));
+		out.println(F("\t started..."));
 
-		ulTimeStamp_Start = millis();
+		timestamp_Start = millis();
 		for (ulIndex = 0; ulIndex <= ulLoopCount; ulIndex++) {
 			myEncoder1.updateClassic();
 		}
-		ulTimeStamp_Stop = millis();
+		timestamp_Stop = millis();
 
-		ulDuration = ulTimeStamp_Stop - ulTimeStamp_Start ;
+		ulDuration = timestamp_Stop - timestamp_Start ;
 
-		pOut.println(F("\t end."));
-		pOut.print(F("\t ulDuration: "));
-		pOut.println(ulDuration);
+		out.println(F("\t end."));
+		out.print(F("\t ulDuration: "));
+		out.println(ulDuration);
 	} /**/
 
 	/**/ {
-		pOut.println(F("    myEncoder1.updateGray();"));
+		out.println(F("    myEncoder1.updateGray();"));
 
-		pOut.println(F("\t started..."));
+		out.println(F("\t started..."));
 
-		ulTimeStamp_Start = millis();
+		timestamp_Start = millis();
 		for (ulIndex = 0; ulIndex <= ulLoopCount; ulIndex++) {
 			myEncoder1.updateGray();
 		}
-		ulTimeStamp_Stop = millis();
+		timestamp_Stop = millis();
 
-		ulDuration = ulTimeStamp_Stop - ulTimeStamp_Start ;
+		ulDuration = timestamp_Stop - timestamp_Start ;
 
-		pOut.println(F("\t end."));
-		pOut.print(F("\t ulDuration: "));
-		pOut.println(ulDuration);
+		out.println(F("\t end."));
+		out.print(F("\t ulDuration: "));
+		out.println(ulDuration);
 	} /**/
 
-	pOut.println(F("~~~~~~~~~~~~~~~~~~~~"));
+	out.println(F("~~~~~~~~~~~~~~~~~~~~"));
 }
 
 /**************************************************/
@@ -764,8 +764,8 @@ void setup() {
 	/************************************************/
 
 		//LiveSign
-		pinMode(cbID_LED_Info, OUTPUT);
-		digitalWrite(cbID_LED_Info, HIGH);
+		pinMode(id_LED_Info, OUTPUT);
+		digitalWrite(id_LED_Info, HIGH);
 
 		// as of arduino 1.0.1 you can use INPUT_PULLUP
 
@@ -785,8 +785,8 @@ void setup() {
 		// for ATmega32U4 devices:
 		#if defined (__AVR_ATmega32U4__)
 			// Wait for Serial Connection to be Opend from Host or 6second timeout
-			unsigned long ulTimeStamp_Start = millis();
-			while( (! Serial) && ( (millis() - ulTimeStamp_Start) < 6000 ) ) {
+			uint32_t timestamp_Start = millis();
+			while( (! Serial) && ( (millis() - timestamp_Start) < 6000 ) ) {
 				1;
 			}
 		#endif
@@ -899,8 +899,8 @@ void loop() {
 
 		/*
 		// every Nms
-		if ( ( millis() - ulTimeStamp_LastAction ) > cwUpdateInterval) {
-			ulTimeStamp_LastAction =  millis();
+		if ( ( millis() - timestamp_LastAction ) > cwUpdateInterval) {
+			timestamp_LastAction =  millis();
 
 		}
 		*/
@@ -938,10 +938,10 @@ void loop() {
 				bLEDState = ! bLEDState;
 				if (bLEDState) {
 					//set LED to HIGH
-					digitalWrite(cbID_LED_Info, HIGH);
+					digitalWrite(id_LED_Info, HIGH);
 				} else {
 					//set LED to LOW
-					digitalWrite(cbID_LED_Info, LOW);
+					digitalWrite(id_LED_Info, LOW);
 				}
 			}
 
