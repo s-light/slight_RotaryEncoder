@@ -72,22 +72,27 @@ class slight_RotaryEncoder {
         typedef void (* tcbfOnEvent) (slight_RotaryEncoder *pInstance, uint8_t event);
 
         // init
-        static const uint8_t event_NoEvent			=  0;
+        static const uint8_t event_NoEvent =  0;
 
         // State
-        static const uint8_t event_StateChanged	= 10;
+        static const uint8_t event_StateChanged = 10;
 
-        static const uint8_t state_NotValid		= 11;
-        static const uint8_t state_UNDEFINED		= 12;
-        static const uint8_t state_CW				= 13;
-        static const uint8_t state_CCW				= 14;
-        static const uint8_t state_HalfStep		= 15;
+        static const uint8_t state_NotValid = 11;
+        static const uint8_t state_UNDEFINED = 12;
+        static const uint8_t state_CW = 13;
+        static const uint8_t state_CCW = 14;
+        static const uint8_t state_HalfStep = 15;
 
         // Value rotate
-        static const uint8_t event_Rotated			= 20;
-        static const uint8_t event_Rotated_CW		= 21;
-        static const uint8_t event_Rotated_CCW		= 22;
+        static const uint8_t event_Rotated = 20;
+        static const uint8_t event_Rotated_CW = 21;
+        static const uint8_t event_Rotated_CCW = 22;
 
+        // ID
+        const uint8_t id;
+        // pins
+        const uint8_t pin_A;
+        const uint8_t pin_B;
 
         // public methods
         slight_RotaryEncoder(
@@ -103,8 +108,6 @@ class slight_RotaryEncoder {
         void begin();
         boolean isReady();
 
-        uint8_t getID();
-
         // state
         uint8_t getState();
         uint8_t printState(Print &out, uint8_t stateTemp);
@@ -119,6 +122,8 @@ class slight_RotaryEncoder {
         void update();
 
         // updateInput
+        // void pin_changed_ISR();
+        boolean flag_use_classic;
         void updateClassic();
         // old
         void updateGray();
@@ -129,19 +134,19 @@ class slight_RotaryEncoder {
         // get AccelerationFactor
         uint8_t getAccelerationFactor();
         // call after you have read all data
-        void resetData();
+        void clearSteps();
 
     private:
-        // per object data
-
-        // ID
-        const uint8_t id;
+        // per object private data
 
         // flag to check if the begin function is already called and the class is ready to work.
         boolean ready;
 
         // internal state
         uint8_t state;
+
+        // pulses per step
+        const uint8_t pulse_per_step;
 
         // event
         uint8_t event;
@@ -151,12 +156,7 @@ class slight_RotaryEncoder {
         //call back functions:
         //const tCbfuncValueChanged cbfuncValueChanged;
 
-        // pins
-        const uint8_t pin_A;
-        const uint8_t pin_B;
 
-        // pulses per step
-        const uint8_t pulse_per_step;
 
         // internal pulse counter
         uint8_t pulse_count;
@@ -191,7 +191,7 @@ class slight_RotaryEncoder {
 
         void stateChange();
 
-        void generateEvent(uint8_t eventNew);
+        void generateEvent(uint8_t event_new);
 
         uint8_t multiMap(uint8_t val, uint8_t* _in, uint8_t* _out, uint8_t size);
 };
