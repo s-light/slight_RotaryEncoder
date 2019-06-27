@@ -83,7 +83,7 @@ slight_RotaryEncoder myencoder1(
     A5,
     // uint8_t pulse_per_step_new,
     2,
-    // tCallbackFunction callbackOnEvent_New
+    // tCallbackFunction callbackOnEvent_new
     myencoder_event
 );
 

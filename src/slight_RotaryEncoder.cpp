@@ -497,9 +497,9 @@ void slight_RotaryEncoder::calcAcceleration() {
     Serial.println(acceleration_duration_step_sum / abs(step_count));
     #endif
 
-    const uint8_t accMap_cbSize = 6;
-    uint8_t accMap_wIn[accMap_cbSize] = {   0,  10,  11,  25,  26, 255};
-    uint8_t accMap_wOut[accMap_cbSize] = {  10,  10,   5,   5,   1,   1};
+    const uint8_t accMap_cbSize = 5;
+    uint8_t accMap_wIn[accMap_cbSize] =  {  0,  10,  25,  26, 255};
+    uint8_t accMap_wOut[accMap_cbSize] = { 30,  10,   5,   1,   1};
 
     // calculate average duration
     acceleration_duration = acceleration_duration_step_sum / abs(step_count);
