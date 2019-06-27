@@ -54,9 +54,9 @@ https://opensource.org/licenses/mit-license.php
 // ------------------------------------------
 // slight_RotaryEncoder things
 
-void myencoder_event(slight_RotaryEncoder *instance, byte event) {
+void myencoder_event(slight_RotaryEncoder *instance) {
     // react on event
-    switch (event) {
+    switch ((*instance).getEventLast()) {
         case slight_RotaryEncoder::event_Rotated : {
             // get current data
             int16_t temp_steps = (*instance).getSteps();
@@ -92,26 +92,6 @@ void myencoder1_pin_changed_ISR() {
     // myencoder1.updateGray();
 }
 
-void myencoder_setup(Print &out) {
-    out.println(F("setup slight_RotaryEncoder:")); {
-        out.println(F("  pinMode INPUT_PULLUP"));
-        pinMode(myencoder1.pin_A, INPUT_PULLUP);
-        pinMode(myencoder1.pin_B, INPUT_PULLUP);
-        out.println(F("  attach interrupts"));
-        attachInterrupt(
-            digitalPinToInterrupt(myencoder1.pin_A),
-            myencoder1_pin_changed_ISR,
-            CHANGE);
-        attachInterrupt(
-            digitalPinToInterrupt(myencoder1.pin_B),
-            myencoder1_pin_changed_ISR,
-            CHANGE);
-        out.println(F("  myencoder1.begin()"));
-        myencoder1.begin();
-    }
-    out.println(F("  finished."));
-}
-
 // ------------------------------------------
 // setup
 // ------------------------------------------
@@ -130,7 +110,7 @@ void setup() {
     Serial.println(F("minimal example for library usage."));
 
     // ------------------------------------------
-    myencoder_setup(Serial);
+    myencoder1.begin(myencoder1_pin_changed_ISR);
 
     // ------------------------------------------
     Serial.println(F("Loop:"));
