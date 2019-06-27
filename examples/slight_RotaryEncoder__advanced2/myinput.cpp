@@ -4,7 +4,7 @@
     some description...
 
     libraries used:
-        ~ slight_ButtonInput
+        ~ slight_RotaryEncoder
             written by stefan krueger (s-light),
                 git@s-light.eu, http://s-light.eu, https://github.com/s-light/
             license: MIT
@@ -42,7 +42,7 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
-#include <slight_ButtonInput.h>
+#include <slight_RotaryEncoder.h>
 
 // include own headerfile
 // NOLINTNEXTLINE(build/include)
@@ -58,10 +58,8 @@ SOFTWARE.
 // MyInput::MyInput(Stream &out): out(out) {
 MyInput::MyInput()
 :
-    callbackGetInput(
-        std::bind(&MyInput::mybutton_get_input, this, std::placeholders::_1)),
     callbackOnEvent(
-        std::bind(&MyInput::mybutton_event, this, std::placeholders::_1))
+        std::bind(&MyInput::myencoder_event, this, std::placeholders::_1))
 // NOLINTNEXTLINE(whitespace/braces)
 {
     ready = false;
@@ -79,9 +77,7 @@ void MyInput::begin(Stream &out) {
         // setup
         out.println("MyInput begin:");
 
-        pinMode(mybutton.pin, INPUT_PULLUP);
-        mybutton.begin();
-        mybutton.flag_filter_multi_click_events = true;
+        myencoder_setup(out);
 
         out.println("done:");
         // enable
@@ -97,10 +93,12 @@ void MyInput::end() {
 
 void MyInput::update() {
     if (ready) {
-        mybutton.update();
-        if (state != state_last) {
-            state_last = state;
-            Serial.println("State changed!");
+        myencoder.update();
+        if (counter != counter_last) {
+            counter_last = counter;
+            Serial.print("counter changed: ");
+            Serial.print(counter);
+            Serial.println();
         }
     }
 }
@@ -108,15 +106,39 @@ void MyInput::update() {
 
 
 // ------------------------------------------
-// slight_ButtonInput things
+// slight_RotaryEncoder things
 
-boolean MyInput::mybutton_get_input(slight_ButtonInput *instance) {
-    // read input + invert: button closes to GND.
-    return !digitalRead((*instance).pin);
+void MyInput::myencoder_setup(Print &out) {
+    out.println(F("setup slight_RotaryEncoder:")); {
+        out.println(F("  pinMode INPUT_PULLUP"));
+        pinMode(myencoder.pin_A, INPUT_PULLUP);
+        pinMode(myencoder.pin_B, INPUT_PULLUP);
+        out.println(F("  attach interrupts"));
+        // attachInterrupt(
+        //     digitalPinToInterrupt(myencoder.pin_A),
+        //     CHANGE);
+        attachInterrupt(
+            digitalPinToInterrupt(myencoder.pin_A),
+            // myencoder_pin_changed_ISR,
+            // std::bind(&MyInput::myencoder_pin_changed_ISR, this),
+            [this]() { this->myencoder_pin_changed_ISR(); },
+            CHANGE);
+        attachInterrupt(
+            digitalPinToInterrupt(myencoder.pin_B),
+            myencoder_pin_changed_ISR,
+            CHANGE);
+        out.println(F("  myencoder.begin()"));
+        myencoder.begin();
+    }
+    out.println(F("  finished."));
 }
 
+void MyInput::myencoder_pin_changed_ISR() {
+    myencoder.updateClassic();
+    // myencoder.updateGray();
+}
 
-void MyInput::mybutton_event(slight_ButtonInput *instance) {
+void MyInput::myencoder_event(slight_RotaryEncoder *instance) {
     Serial.print(F("instance:"));
     Serial.print((*instance).id);
     Serial.print(F(" - event: "));
@@ -125,34 +147,26 @@ void MyInput::mybutton_event(slight_ButtonInput *instance) {
 
     // react on event
     switch ((*instance).getEventLast()) {
-        case slight_ButtonInput::event_down : {
-            // Serial.println(F("down"));
+        case slight_RotaryEncoder::event_StateChanged : {
+            Serial.print(F("\t state: "));
+            (*instance).printState(Serial);
+            Serial.println();
         } break;
-        case slight_ButtonInput::event_holddown : {
-            Serial.print(F("duration active: "));
-            Serial.println((*instance).getDurationActive());
+        // rotation
+        case slight_RotaryEncoder::event_Rotated : {
+            // get current data
+            int16_t temp_steps = (*instance).getSteps();
+            int16_t temp_stepsAccel = (*instance).getStepsAccelerated();
+            // clear data
+            (*instance).clearSteps();
+
+            Serial.print(F("  steps: "));
+            Serial.println(temp_steps);
+            Serial.print(F("  steps accelerated: "));
+            Serial.println(temp_stepsAccel);
+            counter += temp_stepsAccel;
         } break;
-        case slight_ButtonInput::event_up : {
-            // Serial.println(F("up"));
-        } break;
-        case slight_ButtonInput::event_click : {
-            // Serial.println(F("click"));
-            state += 1;
-        } break;
-        case slight_ButtonInput::event_click_long : {
-            Serial.print(F("click long "));
-            Serial.println((*instance).getDurationActive());
-        } break;
-        case slight_ButtonInput::event_click_double : {
-            // Serial.println(F("click double"));
-        } break;
-        case slight_ButtonInput::event_click_triple : {
-            // Serial.println(F("click triple"));
-        } break;
-        case slight_ButtonInput::event_click_multi : {
-            Serial.print(F("click multi - count: "));
-            Serial.println((*instance).getClickCount());
-        } break;
+        // currently there are no other events fired.
     }  // end switch
 }
 

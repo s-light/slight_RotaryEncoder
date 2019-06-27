@@ -52,24 +52,45 @@ https://opensource.org/licenses/mit-license.php
 #ifndef slight_RotaryEncoder_Mod_h
 #define slight_RotaryEncoder_Mod_h
 
-/**
-  * Includes Core Arduino functionality
-  **/
+// Includes Core Arduino functionality
 #if ARDUINO < 100
 #include <WProgram.h>
 #else
 #include <Arduino.h>
 #endif
 
-/** Class Definition: **/
+// experiments with std:function
+// https://stackoverflow.com/questions/14189440/c-callback-using-class-member#14189561
+
+// fix  "error: macro "min" passed 3 arguments, but takes just 2"
+#undef min
+#undef max
+// fix
+// undefined reference to `std::__throw_bad_function_call()'
+// found at
+// https://forum.arduino.cc/index.php?topic=382211.msg2790687#msg2790687
+// namespace std {
+//     void __throw_bad_function_call() {
+//         Serial.println(F("STL ERROR - __throw_bad_function_call"));
+//     }
+// }
+// but results in
+// warning: 'noreturn' function does return [enabled by default
+// and
+// multiple definition of `std::__throw_bad_function_call()'
+// if we move this to the main .ino file it works...
+
+#include <functional>
+
+
 class slight_RotaryEncoder {
     public:
         // public definitions:
 
         //call back function definition
-        //typedef void (* tCbfuncValueChanged) (uint8_t bID, int16_t iValue, uint8_t raw_Acceleration);
-        //typedef void (* tCbfuncValueChanged) (slight_RotaryEncoder *pInstance, int16_t iValue, uint8_t raw_Acceleration);
-        typedef void (* tcbfOnEvent) (slight_RotaryEncoder *pInstance, uint8_t event);
+        // typedef void (* tCallbackFunction) (slight_RotaryEncoder *pInstance, uint8_t event);
+        using tCallbackFunction =
+            std::function<void(slight_RotaryEncoder *instance)>;
 
         // init
         static const uint8_t event_NoEvent =  0;
@@ -88,9 +109,7 @@ class slight_RotaryEncoder {
         static const uint8_t event_Rotated_CW = 21;
         static const uint8_t event_Rotated_CCW = 22;
 
-        // ID
         const uint8_t id;
-        // pins
         const uint8_t pin_A;
         const uint8_t pin_B;
 
@@ -100,8 +119,7 @@ class slight_RotaryEncoder {
             uint8_t pin_A_new,
             uint8_t pin_B_new,
             uint8_t pulse_per_step_new,
-            //tCbfuncValueChanged cbfuncValueChanged_New
-            tcbfOnEvent cbfCallbackOnEvent_New
+            tCallbackFunction callbackOnEvent_New
         );
         ~slight_RotaryEncoder();
 
@@ -114,9 +132,9 @@ class slight_RotaryEncoder {
         uint8_t printState(Print &out);
 
         // event
-        uint8_t getLastEvent();
+        uint8_t getEventLast();
         uint8_t printEvent(Print &out, uint8_t eventTemp);
-        uint8_t printevent_last(Print &out);
+        uint8_t printEventLast(Print &out);
 
         // run every loop to update event system
         void update();
@@ -128,7 +146,7 @@ class slight_RotaryEncoder {
         // old
         void updateGray();
 
-        // get steps
+        // steps
         int16_t getSteps();
         int16_t getStepsAccelerated();
         // get AccelerationFactor
@@ -137,26 +155,19 @@ class slight_RotaryEncoder {
         void clearSteps();
 
     private:
-        // per object private data
-
         // flag to check if the begin function is already called and the class is ready to work.
         boolean ready;
 
         // internal state
         uint8_t state;
 
-        // pulses per step
-        const uint8_t pulse_per_step;
-
         // event
         uint8_t event;
         uint8_t event_last;
-        const tcbfOnEvent cbfCallbackOnEvent;
+        const tCallbackFunction callbackOnEvent;
 
-        //call back functions:
-        //const tCbfuncValueChanged cbfuncValueChanged;
-
-
+        // pulses per step
+        const uint8_t pulse_per_step;
 
         // internal pulse counter
         uint8_t pulse_count;
@@ -198,4 +209,4 @@ class slight_RotaryEncoder {
 
 #endif // ifndef slight_RotaryEncoder_h
 
-/** the end **/
+// the end

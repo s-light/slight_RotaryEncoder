@@ -3,7 +3,7 @@
     some description...
 
     libraries used:
-        ~ slight_ButtonInput
+        ~ slight_RotaryEncoder
             written by stefan krueger (s-light),
                 git@s-light.eu, http://s-light.eu, https://github.com/s-light/
             license: MIT
@@ -44,7 +44,7 @@ SOFTWARE.
 // include Core Arduino functionality
 #include <Arduino.h>
 
-#include <slight_ButtonInput.h>
+#include <slight_RotaryEncoder.h>
 
 
 class MyInput {
@@ -66,31 +66,25 @@ public:
     void end();
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // button
-    boolean mybutton_get_input(slight_ButtonInput *instance);
-    slight_ButtonInput::tCallbackFunctionGetInput callbackGetInput;
-    void mybutton_event(slight_ButtonInput *instance);
-    slight_ButtonInput::tCallbackFunction callbackOnEvent;
+    // encoder
+    void myencoder_event(slight_RotaryEncoder *instance);
+    slight_RotaryEncoder::tCallbackFunction callbackOnEvent;
 
-    slight_ButtonInput mybutton = slight_ButtonInput(
-        55, A3, callbackGetInput, callbackOnEvent);
+    slight_RotaryEncoder myencoder = slight_RotaryEncoder(
+        55, A4, A5, 2, callbackOnEvent);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations
 
 private:
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // private functions
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // attributes
     bool ready;
     // Stream &out;
 
-    uint8_t state = 0;
-    uint8_t state_last = 0;
+    int16_t counter = 0;
+    int16_t counter_last = 0;
 
+    void myencoder_setup(Print &out);
+    void myencoder_pin_changed_ISR();
 };  // class MyInput
 
 #endif  // myinput_H_

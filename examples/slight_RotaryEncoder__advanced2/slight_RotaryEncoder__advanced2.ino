@@ -1,17 +1,17 @@
 /******************************************
 
-    slight_ButtonInput__test
-        minimal example for slight_ButtonInput lib usage.
+    slight_RotaryEncoder__test
+        minimal example for slight_RotaryEncoder lib usage.
         debugport: serial interface 115200baud
 
     hardware:
         Arduino board of any typ.
-        A3 --> Pushbutton closing to GND
-        A4 --> Pushbutton closing to GND
-        A5 --> Pushbutton closing to GND
+        Tested on ItsyBitsy M4
+        A4 --> encoder pin A
+        A5 --> encoder pin B
 
     libraries used:
-        ~ slight_ButtonInput
+        ~ slight_RotaryEncoder
 
     written by stefan krueger (s-light),
         git@s-light.eu, http://s-light.eu, https://github.com/s-light/
@@ -48,8 +48,8 @@ SOFTWARE.
 https://opensource.org/licenses/mit-license.php
 ******************************************/
 
-#include <slight_ButtonInputHelper.h>
-#include <slight_ButtonInput.h>
+#include <slight_RotaryEncoder_CallbackHelper.h>
+#include <slight_RotaryEncoder.h>
 
 #include "myinput.h"
 
@@ -70,8 +70,8 @@ void setup() {
 
     // ------------------------------------------
     // print short welcome text
-    Serial.println(F("slight_ButtonInput__test.ino sketch."));
-    Serial.println(F("minimal example for library usage."));
+    Serial.println(F("slight_RotaryEncoder__advanced2.ino sketch."));
+    Serial.println(F("advanced example for library usage."));
 
     // ------------------------------------------
     myinput.begin(Serial);

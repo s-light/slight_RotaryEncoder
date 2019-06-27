@@ -47,6 +47,7 @@ SOFTWARE.
 https://opensource.org/licenses/mit-license.php
 ******************************************/
 
+#include <slight_RotaryEncoder_CallbackHelper.h>
 #include <slight_RotaryEncoder.h>
 
 
@@ -71,10 +72,9 @@ boolean debugOut_LED_Enabled = 1;
 // slight_RotaryEncoder things
 
 void myencoder_event(slight_RotaryEncoder *instance) {
-    Serial.print(F("Instance ID:"));
-    Serial.println((*instance).id);
-
-    Serial.print(F("Event: "));
+    Serial.print(F("instance:"));
+    Serial.print((*instance).id);
+    Serial.print(F(" - event: "));
     (*instance).printEventLast(Serial);
     Serial.println();
 
@@ -112,7 +112,7 @@ slight_RotaryEncoder myencoder1(
     A5,
     // uint8_t pulse_per_step_new,
     2,
-    // tcbfOnEvent cbfCallbackOnEvent_New
+    // tCallbackFunction callbackOnEvent_New
     myencoder_event
 );
 

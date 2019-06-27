@@ -47,6 +47,7 @@ SOFTWARE.
 https://opensource.org/licenses/mit-license.php
 ******************************************/
 
+#include <slight_RotaryEncoder_CallbackHelper.h>
 #include <slight_RotaryEncoder.h>
 
 
@@ -82,7 +83,7 @@ slight_RotaryEncoder myencoder1(
     A5,
     // uint8_t pulse_per_step_new,
     2,
-    // tcbfOnEvent cbfCallbackOnEvent_New
+    // tCallbackFunction callbackOnEvent_New
     myencoder_event
 );
 

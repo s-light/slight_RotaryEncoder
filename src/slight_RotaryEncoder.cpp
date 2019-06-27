@@ -89,7 +89,8 @@ https://opensource.org/licenses/mit-license.php
 #endif
 
 // include headerfile
-#include "slight_RotaryEncoder.h"
+// NOLINTNEXTLINE(build/include)
+#include "./slight_RotaryEncoder.h"
 
 /*******************************************/
 // info
@@ -141,15 +142,14 @@ slight_RotaryEncoder::slight_RotaryEncoder(
     uint8_t pin_A_new,
     uint8_t pin_B_new,
     uint8_t pulse_per_step_new,
-    // tCbfuncValueChanged cbfuncValueChanged_New
-    tcbfOnEvent cbfCallbackOnEvent_New
+    tCallbackFunction callbackOnEvent_New
 ) :
     id(id_new),
     pin_A(pin_A_new),
     pin_B(pin_B_new),
     pulse_per_step(pulse_per_step_new),
-    // cbfuncValueChanged (cbfuncValueChanged_New)
-    cbfCallbackOnEvent(cbfCallbackOnEvent_New)
+    callbackOnEvent(callbackOnEvent_New)
+// NOLINTNEXTLINE(whitespace/braces)
 {
     raw_A = 0;
     raw_B = 0;
@@ -423,7 +423,7 @@ uint8_t slight_RotaryEncoder::printState(Print &out) {
 }
 
 
-uint8_t slight_RotaryEncoder::getLastEvent() {
+uint8_t slight_RotaryEncoder::getEventLast() {
     return event_last;
 }
 
@@ -583,7 +583,7 @@ void slight_RotaryEncoder::generateEvent(uint8_t event_new) {
     // call event
     // if (event != event_NoEvent) {
     if ((event != event_NoEvent) && (event != event_StateChanged)) {
-        cbfCallbackOnEvent(this, event);
+        callbackOnEvent(this, event);
     }
     event_last = event;
     event = event_NoEvent;
