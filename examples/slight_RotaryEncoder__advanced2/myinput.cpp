@@ -69,7 +69,7 @@ MyInput::~MyInput() {
     end();
 }
 
-void MyInput::begin(Stream &out) {
+void MyInput::begin(Stream &out, slight_RotaryEncoder::tCallbackFunctionISR funcISR) {
     // clean up..
     end();
     // start up...
@@ -77,7 +77,8 @@ void MyInput::begin(Stream &out) {
         // setup
         out.println("MyInput begin:");
 
-        myencoder_setup(out);
+        out.println("  myencoder.begin");
+        myencoder.begin(funcISR);
 
         out.println("done:");
         // enable
@@ -107,45 +108,6 @@ void MyInput::update() {
 
 // ------------------------------------------
 // slight_RotaryEncoder things
-
-void MyInput::myencoder_setup(Print &out) {
-    out.println(F("setup slight_RotaryEncoder:")); {
-        out.println(F("  pinMode INPUT_PULLUP"));
-        // pinMode(myencoder.pin_A, INPUT_PULLUP);
-        // pinMode(myencoder.pin_B, INPUT_PULLUP);
-        out.println(F("  attach interrupts"));
-        out.println(F("  --> currently not possible from class!"));
-        out.println(F("    please do this in your main sketch."));
-        out.println(F("    for more information have a look at"));
-        out.println(F("    https://github.com/arduino/ArduinoCore-avr/pull/58"));
-        // attachInterrupt(
-        //     digitalPinToInterrupt(myencoder.pin_A),
-        //     // myencoder_pin_changed_ISR,
-        //     // std::bind(&MyInput::myencoder_pin_changed_ISR, this),
-        //     [this]() { this->myencoder_pin_changed_ISR(); },
-        //     CHANGE);
-        // attachInterrupt(
-        //     digitalPinToInterrupt(myencoder.pin_B),
-        //     myencoder_pin_changed_ISR,
-        //     CHANGE);
-        // attachInterrupt(
-        //     digitalPinToInterrupt(myencoder.pin_A),
-        //     myencoder_pin_changed_ISR,
-        //     CHANGE);
-        // attachInterrupt(
-        //     digitalPinToInterrupt(myencoder.pin_B),
-        //     myencoder_pin_changed_ISR,
-        //     CHANGE);
-        out.println(F("  myencoder.begin()"));
-        myencoder.begin();
-    }
-    out.println(F("  finished."));
-}
-
-// void MyInput::myencoder_pin_changed_ISR() {
-//     myencoder.updateClassic();
-//     // myencoder.updateGray();
-// }
 
 void MyInput::myencoder_event(slight_RotaryEncoder *instance) {
     Serial.print(F("instance:"));

@@ -103,6 +103,7 @@ class slight_RotaryEncoder {
             #error “Not implemented yet. please create a pull-request :-)”
         #endif
 
+        using tCallbackFunctionISR = void (*)();
 
         // init
         static const uint8_t event_NoEvent =  0;
@@ -135,7 +136,7 @@ class slight_RotaryEncoder {
         );
         ~slight_RotaryEncoder();
 
-        void begin();
+        void begin(tCallbackFunctionISR func_ISR);
         boolean isReady();
 
         // state
@@ -172,7 +173,7 @@ class slight_RotaryEncoder {
 
         // internal state
         uint8_t state;
-        
+
         // pulses per step
         const uint8_t pulse_per_step;
 

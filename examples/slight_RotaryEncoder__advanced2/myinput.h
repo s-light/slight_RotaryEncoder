@@ -53,6 +53,8 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // defines
 
+    // using tCallbackFunctionISR = void (*)();
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
 
@@ -64,7 +66,7 @@ public:
     // public functions
 
     // basic library api
-    void begin(Stream &out);
+    void begin(Stream &out, slight_RotaryEncoder::tCallbackFunctionISR funcISR);
     void update();
     void end();
 
@@ -86,7 +88,7 @@ private:
     int16_t counter = 0;
     int16_t counter_last = 0;
 
-    void myencoder_setup(Print &out);
+    void myencoder_setup(Print &out, slight_RotaryEncoder::tCallbackFunctionISR funcISR);
     // void myencoder_pin_changed_ISR();
 };  // class MyInput
 

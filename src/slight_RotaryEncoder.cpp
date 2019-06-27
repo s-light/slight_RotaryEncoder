@@ -181,7 +181,7 @@ slight_RotaryEncoder::~slight_RotaryEncoder() {
 }
 
 
-void slight_RotaryEncoder::begin() {
+void slight_RotaryEncoder::begin(tCallbackFunctionISR func_ISR) {
     if (ready == false) {
         // &Print out = Serial;
         // print_info(out);
@@ -191,17 +191,18 @@ void slight_RotaryEncoder::begin() {
         // out.println(F("FaderLin::begin: "));
 
         // out.println(F(" initialise pins"));
-        // pinMode(pin_A, INPUT_PULLUP);
-        // pinMode(pin_B, INPUT_PULLUP);
+        pinMode(pin_A, INPUT_PULLUP);
+        pinMode(pin_B, INPUT_PULLUP);
 
         // out.println(F(" attach interrupts"));
-        // this is not possible here -
         // attachInterrupt only allowes for non-member functions
         // https://arduino.stackexchange.com/a/4865/13509
-        // attachInterrupt(
-        //     digitalPinToInterrupt(pin_A), pin_changed_ISR, CHANGE);
-        // attachInterrupt(
-        //     digitalPinToInterrupt(pin_B), pin_changed_ISR, CHANGE);
+        // https://github.com/arduino/ArduinoCore-avr/pull/58
+        // so we need to get it passed from the main calling sketch..
+        attachInterrupt(
+            digitalPinToInterrupt(pin_A), func_ISR, CHANGE);
+        attachInterrupt(
+            digitalPinToInterrupt(pin_B), func_ISR, CHANGE);
 
         event = event_NoEvent;
         event_last = event_NoEvent;
