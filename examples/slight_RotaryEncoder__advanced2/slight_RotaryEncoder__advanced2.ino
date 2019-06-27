@@ -56,6 +56,29 @@ https://opensource.org/licenses/mit-license.php
 // MyInput myinput = MyInput(Serial);
 MyInput myinput = MyInput();
 
+void myinput_setup(Stream &out) {
+    // this is only possible here in the main..
+    pinMode(myinput.myencoder.pin_A, INPUT_PULLUP);
+    pinMode(myinput.myencoder.pin_B, INPUT_PULLUP);
+    attachInterrupt(
+        digitalPinToInterrupt(myinput.myencoder.pin_A),
+        myinput_myencoder_pin_changed_ISR,
+        CHANGE);
+    attachInterrupt(
+        digitalPinToInterrupt(myinput.myencoder.pin_B),
+        myinput_myencoder_pin_changed_ISR,
+        CHANGE);
+
+    myinput.begin(out);
+}
+
+void myinput_myencoder_pin_changed_ISR() {
+    myinput.myencoder.updateClassic();
+    // myinput.myencoder.updateGray();
+}
+
+
+
 // ------------------------------------------
 // setup
 // ------------------------------------------
@@ -74,7 +97,8 @@ void setup() {
     Serial.println(F("advanced example for library usage."));
 
     // ------------------------------------------
-    myinput.begin(Serial);
+    myinput_setup(Serial);
+
 
     // ------------------------------------------
     Serial.println(F("Loop:"));

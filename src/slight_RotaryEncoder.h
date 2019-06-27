@@ -61,26 +61,29 @@ https://opensource.org/licenses/mit-license.php
 
 // experiments with std:function
 // https://stackoverflow.com/questions/14189440/c-callback-using-class-member#14189561
-
-// fix  "error: macro "min" passed 3 arguments, but takes just 2"
-#undef min
-#undef max
-// fix
-// undefined reference to `std::__throw_bad_function_call()'
-// found at
-// https://forum.arduino.cc/index.php?topic=382211.msg2790687#msg2790687
-// namespace std {
-//     void __throw_bad_function_call() {
-//         Serial.println(F("STL ERROR - __throw_bad_function_call"));
-//     }
-// }
-// but results in
-// warning: 'noreturn' function does return [enabled by default
-// and
-// multiple definition of `std::__throw_bad_function_call()'
-// if we move this to the main .ino file it works...
-
-#include <functional>
+// more on this topic at
+// https://github.com/arduino/ArduinoCore-avr/pull/58
+#if defined(ARDUINO_ARCH_SAMD)
+    // fix  "error: macro "min" passed 3 arguments, but takes just 2"
+    #undef min
+    #undef max
+    // fix
+    // undefined reference to `std::__throw_bad_function_call()'
+    // found at
+    // https://forum.arduino.cc/index.php?topic=382211.msg2790687#msg2790687
+    // namespace std {
+    //     void __throw_bad_function_call() {
+    //         Serial.println(F("STL ERROR - __throw_bad_function_call"));
+    //     }
+    // }
+    // but results in
+    // warning: 'noreturn' function does return [enabled by default
+    // and
+    // multiple definition of `std::__throw_bad_function_call()'
+    // if we move this to the main .ino file it works...
+    // → please include slight_ButtonInput_CallbackHelper.h from the main sketch.
+    #include <functional>
+#endif
 
 
 class slight_RotaryEncoder {
@@ -88,9 +91,18 @@ class slight_RotaryEncoder {
         // public definitions:
 
         //call back function definition
-        // typedef void (* tCallbackFunction) (slight_RotaryEncoder *pInstance, uint8_t event);
-        using tCallbackFunction =
-            std::function<void(slight_RotaryEncoder *instance)>;
+        #if defined(ARDUINO_ARCH_AVR)
+            // using tCallbackFunction =  void (*)(uint8_t);
+            using tCallbackFunction =
+                void (*)(slight_RotaryEncoder *instance);
+        #elif defined(ARDUINO_ARCH_SAMD)
+            // using tCallbackFunction = std::function<void(uint8_t)>;
+            using tCallbackFunction =
+                std::function<void(slight_RotaryEncoder *instance)>;
+        #else
+            #error “Not implemented yet. please create a pull-request :-)”
+        #endif
+
 
         // init
         static const uint8_t event_NoEvent =  0;
@@ -160,14 +172,14 @@ class slight_RotaryEncoder {
 
         // internal state
         uint8_t state;
+        
+        // pulses per step
+        const uint8_t pulse_per_step;
 
         // event
         uint8_t event;
         uint8_t event_last;
         const tCallbackFunction callbackOnEvent;
-
-        // pulses per step
-        const uint8_t pulse_per_step;
 
         // internal pulse counter
         uint8_t pulse_count;

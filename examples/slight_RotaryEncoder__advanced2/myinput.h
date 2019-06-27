@@ -51,6 +51,9 @@ class MyInput {
 public:
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // defines
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // constructor
 
     // MyInput(Stream &out);
@@ -84,7 +87,7 @@ private:
     int16_t counter_last = 0;
 
     void myencoder_setup(Print &out);
-    void myencoder_pin_changed_ISR();
+    // void myencoder_pin_changed_ISR();
 };  // class MyInput
 
 #endif  // myinput_H_

@@ -53,20 +53,22 @@ https://opensource.org/licenses/mit-license.php
 #ifndef slight_FIX__THROW_BAD_FUNCTION_CALL_h
 #define slight_FIX__THROW_BAD_FUNCTION_CALL_h
 
-// fix
-// undefined reference to `std::__throw_bad_function_call()'
-// found at
-// https://forum.arduino.cc/index.php?topic=382211.msg2790687#msg2790687
-namespace std {
-    void __throw_bad_function_call() {
-        Serial.println(F("STL ERROR - __throw_bad_function_call"));
+#if defined(ARDUINO_ARCH_SAMD)
+    // fix
+    // undefined reference to `std::__throw_bad_function_call()'
+    // found at
+    // https://forum.arduino.cc/index.php?topic=382211.msg2790687#msg2790687
+    namespace std {
+        void __throw_bad_function_call() {
+            Serial.println(F("STL ERROR - __throw_bad_function_call"));
+        }
     }
-}
-// but results in
-// warning: 'noreturn' function does return [enabled by default
-// and
-// multiple definition of `std::__throw_bad_function_call()'
-// if we move this to the main .ino file it works...
+    // but results in
+    // warning: 'noreturn' function does return [enabled by default
+    // and
+    // multiple definition of `std::__throw_bad_function_call()'
+    // if we include it with this Helper it works..
+#endif
 
 #endif // ifndef slight_FIX__THROW_BAD_FUNCTION_CALL_h
 

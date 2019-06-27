@@ -454,7 +454,7 @@ uint8_t slight_RotaryEncoder::printEvent(Print &out, uint8_t eventTemp) {
     return state;
 }
 
-uint8_t slight_RotaryEncoder::printevent_last(Print &out) {
+uint8_t slight_RotaryEncoder::printEventLast(Print &out) {
     printEvent(out, event_last);
     return event_last;
 }
@@ -583,7 +583,7 @@ void slight_RotaryEncoder::generateEvent(uint8_t event_new) {
     // call event
     // if (event != event_NoEvent) {
     if ((event != event_NoEvent) && (event != event_StateChanged)) {
-        callbackOnEvent(this, event);
+        callbackOnEvent(this);
     }
     event_last = event;
     event = event_NoEvent;
