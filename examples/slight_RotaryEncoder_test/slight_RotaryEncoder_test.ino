@@ -70,16 +70,16 @@ boolean debugOut_LED_Enabled = 1;
 // ------------------------------------------
 // slight_RotaryEncoder things
 
-void myencoder_event(slight_RotaryEncoder *instance, byte event) {
+void myencoder_event(slight_RotaryEncoder *instance) {
     Serial.print(F("Instance ID:"));
     Serial.println((*instance).id);
 
     Serial.print(F("Event: "));
-    (*instance).printEvent(Serial, event);
+    (*instance).printEventLast(Serial);
     Serial.println();
 
     // react on event
-    switch (event) {
+    switch ((*instance).getEventLast()) {
         case slight_RotaryEncoder::event_StateChanged : {
             Serial.print(F("\t state: "));
             (*instance).printState(Serial);
