@@ -73,10 +73,13 @@ public:
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // encoder
     void myencoder_event(slight_RotaryEncoder *instance);
-    slight_RotaryEncoder::tCallbackFunction callbackOnEvent;
-
     slight_RotaryEncoder myencoder = slight_RotaryEncoder(
-        55, A4, A5, 2, callbackOnEvent);
+        55,
+        A4,
+        A5,
+        2,
+        std::bind(&MyInput::myencoder_event, this, std::placeholders::_1)
+    );
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // configurations

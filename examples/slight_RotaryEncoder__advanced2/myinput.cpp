@@ -56,12 +56,7 @@ SOFTWARE.
 // functions
 
 // MyInput::MyInput(Stream &out): out(out) {
-MyInput::MyInput()
-:
-    callbackOnEvent(
-        std::bind(&MyInput::myencoder_event, this, std::placeholders::_1))
-// NOLINTNEXTLINE(whitespace/braces)
-{
+MyInput::MyInput() {
     ready = false;
 }
 
