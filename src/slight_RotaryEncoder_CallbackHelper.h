@@ -1,6 +1,6 @@
 /******************************************
-    slight_ButtonInput Library Helper
-        for more information see slight_ButtonInput.cpp
+    slight_* Library Helper
+        for more information see slight_*.cpp
     written by stefan krueger (s-light),
         git@s-light.eu, http://s-light.eu, https://github.com/s-light/
 ******************************************/
@@ -54,6 +54,9 @@ https://opensource.org/licenses/mit-license.php
 #define slight_FIX__THROW_BAD_FUNCTION_CALL_h
 
 #if defined(ARDUINO_ARCH_SAMD)
+    #pragma GCC diagnostic push
+    // #pragma GCC diagnostic ignored "-Wnoreturn"
+    #pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
     // fix
     // undefined reference to `std::__throw_bad_function_call()'
     // found at
@@ -64,10 +67,14 @@ https://opensource.org/licenses/mit-license.php
         }
     }
     // but results in
-    // warning: 'noreturn' function does return [enabled by default
+    // warning: 'noreturn' function does return [enabled by default]
+    // to hide this we try to ignore the *** for this code block..
+    // *** i did not find the correct  ignore flag...
+    // http://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Pragmas.html
     // and
     // multiple definition of `std::__throw_bad_function_call()'
-    // if we include it with this Helper it works..
+    // if we include it normally - with this Helper it works..
+    #pragma GCC diagnostic pop
 #endif
 
 #endif // ifndef slight_FIX__THROW_BAD_FUNCTION_CALL_h
