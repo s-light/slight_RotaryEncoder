@@ -53,7 +53,7 @@ https://opensource.org/licenses/mit-license.php
 #ifndef slight_FIX__THROW_BAD_FUNCTION_CALL_h
 #define slight_FIX__THROW_BAD_FUNCTION_CALL_h
 
-#if defined(ARDUINO_ARCH_SAMD)
+#if defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_ESP32) 
     #pragma GCC diagnostic push
     // #pragma GCC diagnostic ignored "-Wnoreturn"
     #pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
