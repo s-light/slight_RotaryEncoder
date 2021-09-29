@@ -113,7 +113,7 @@ void print_info(const Print &out) {
     out.println(F("|"));
     out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
     out.println(F("|"));
-    out.println(F("| last changed: 25.06.2019"));
+    out.println(F("| last changed: 29.09.2021"));
     out.println(F("|"));
     out.println(F("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
     out.println();
@@ -199,10 +199,12 @@ void slight_RotaryEncoder::begin(tCallbackFunctionISR func_ISR) {
         // https://arduino.stackexchange.com/a/4865/13509
         // https://github.com/arduino/ArduinoCore-avr/pull/58
         // so we need to get it passed from the main calling sketch..
-        attachInterrupt(
-            digitalPinToInterrupt(pin_A), func_ISR, CHANGE);
-        attachInterrupt(
-            digitalPinToInterrupt(pin_B), func_ISR, CHANGE);
+        attachInterrupt(digitalPinToInterrupt(pin_A), func_ISR, CHANGE);
+        attachInterrupt(digitalPinToInterrupt(pin_B), func_ISR, CHANGE);
+        // attachInterrupt(
+        //     digitalPinToInterrupt(pin_A), func_ISR, CHANGE, this);
+        // attachInterrupt(
+        //     digitalPinToInterrupt(pin_B), func_ISR, CHANGE, this);
 
         event = event_NoEvent;
         event_last = event_NoEvent;

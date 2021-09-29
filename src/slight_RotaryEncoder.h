@@ -104,6 +104,9 @@ class slight_RotaryEncoder {
         #endif
 
         using tCallbackFunctionISR = void (*)();
+        // Enable use of attachInterrupt() in classes
+        // https://github.com/arduino/ArduinoCore-avr/issues/85
+        // using tCallbackFunctionISR = void (*)(slight_RotaryEncoder *instance);
 
         // init
         static const uint8_t event_NoEvent =  0;
