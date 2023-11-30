@@ -100,7 +100,7 @@ class slight_RotaryEncoder {
             using tCallbackFunction =
                 std::function<void(slight_RotaryEncoder *instance)>;
         #else
-            #error “Not implemented yet. please create a pull-request :-)”
+            #error Not implemented yet. please create a pull-request :-)
         #endif
 
         using tCallbackFunctionISR = void (*)();
